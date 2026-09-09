@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/unison}
+    username: ${DATABASE_USER:unison}
+    password: ${DATABASE_PASSWORD:unison-local}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
