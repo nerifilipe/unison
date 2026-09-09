@@ -1,0 +1,589 @@
+.sidebar {
+  overflow-y: auto;
+}
+.account-menu {
+  border-top: 1px solid var(--line);
+  margin: 25px 10px 0;
+  padding-top: 19px;
+  font-size: 12px;
+  color: #c9d8b7;
+}
+.account-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.account-menu span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.account-menu small {
+  display: block;
+  font-size: 9px;
+  color: #9aaa8e;
+  margin-top: 5px;
+}
+.account-menu > button {
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+  text-align: left;
+}
+.page-description {
+  margin: 17px 0 28px;
+  color: #a3b096;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.account-page {
+  padding-top: 55px;
+}
+.account-card {
+  max-width: 470px;
+  border: 1px solid #3d4833;
+  border-radius: 10px;
+  background: #20261b;
+  padding: 30px;
+  margin: 30px 0;
+}
+.account-card h2 {
+  font-size: 20px;
+  margin: 15px 0;
+}
+.account-card > p {
+  font-size: 13px;
+  color: #a7b79a;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+.form-stack label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 12px;
+  color: #c5d3b7;
+}
+.form-stack input,
+.form-stack textarea {
+  border: 1px solid #49573c;
+  background: #171c13;
+  border-radius: 5px;
+  color: #eef5e6;
+  padding: 12px 13px;
+  font: inherit;
+  width: 100%;
+  resize: vertical;
+}
+.form-stack label small {
+  font-size: 10px;
+  color: #95a785;
+}
+.auth-tabs {
+  display: flex;
+  gap: 6px;
+  background: #171c13;
+  padding: 4px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+.auth-tabs button {
+  flex: 1;
+  padding: 11px;
+  background: transparent;
+  color: #9eae8e;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.auth-tabs button[aria-pressed="true"] {
+  background: #34442a;
+  color: #dcf3c1;
+}
+.form-error {
+  color: #ffb6a4 !important;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 12px 15px;
+  border: 1px solid #704335;
+  border-radius: 5px;
+  background: #37271f;
+  margin: 15px 0;
+  overflow-wrap: anywhere;
+}
+.form-note {
+  font-size: 10px !important;
+  line-height: 1.7;
+  color: #94a285 !important;
+  margin: 0 !important;
+}
+.text-link {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 12px;
+}
+.text-button {
+  background: transparent;
+  text-decoration: underline;
+  padding: 5px;
+  font-size: inherit;
+}
+.secondary-button,
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.signed-out {
+  padding-top: 70px;
+}
+.signed-out h1 {
+  margin-top: 17px;
+}
+.signed-out p {
+  color: #a1ae94;
+  line-height: 1.8;
+  margin: 24px 0;
+  max-width: 470px;
+}
+.track-extras {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 9px;
+  position: relative;
+}
+.track-extras .genre {
+  margin-top: 0;
+}
+.track-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  position: relative;
+}
+.track-actions .icon-button {
+  min-width: 32px;
+  min-height: 32px;
+}
+.track-actions [aria-pressed="true"] {
+  color: var(--accent);
+}
+.save-prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #b1c29e;
+  font-size: 10px;
+  padding: 5px;
+}
+.inline-warning {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 3;
+  padding: 10px;
+  background: #453329;
+  border-radius: 5px;
+  color: #ffd3bb;
+  width: 230px;
+  font-size: 11px;
+}
+.playlist-dialog {
+  background: #222a1c;
+  border: 1px solid #586847;
+  color: #eff7e6;
+  border-radius: 10px;
+  padding: 25px;
+  width: min(440px, calc(100% - 36px));
+  max-height: 80vh;
+  box-shadow: 0 20px 70px #0009;
+}
+.playlist-dialog::backdrop {
+  background: #080c07b3;
+  backdrop-filter: blur(4px);
+}
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.dialog-title h2 {
+  font-size: 23px;
+}
+.playlist-dialog > p {
+  font-size: 13px;
+  color: #a2b292;
+  margin: 17px 0;
+  line-height: 1.7;
+}
+.playlist-options {
+  display: grid;
+  gap: 9px;
+  margin: 22px 0;
+  max-height: 40vh;
+  overflow: auto;
+}
+.playlist-options button {
+  display: block;
+  text-align: left;
+  background: #303d25;
+  border: 1px solid #455539;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.playlist-options small {
+  display: block;
+  font-size: 10px;
+  color: #a0b08f;
+  margin-top: 7px;
+}
+.playlist-options button:hover {
+  background: #3e5030;
+}
+.library-page > .page-heading {
+  gap: 20px;
+}
+.library-page .section-heading {
+  margin-top: 32px;
+}
+.favorites-banner {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: linear-gradient(110deg, #3c4430, #252f20);
+  border: 1px solid #47573b;
+  border-radius: 8px;
+  padding: 25px 28px;
+  color: #d4ecb9;
+  margin: 25px 0 30px;
+}
+.favorites-banner h2 {
+  font-size: 21px;
+  margin-bottom: 7px;
+}
+.favorites-banner p {
+  font-size: 12px;
+  color: #a3b490;
+}
+.favorites-banner > svg:last-child {
+  margin-left: auto;
+}
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+.playlist-card {
+  min-width: 0;
+}
+.playlist-cover {
+  aspect-ratio: 1.5;
+  border: 1px solid #4c603b;
+  border-radius: 7px;
+  background:
+    radial-gradient(ellipse at 90% 10%, #6d8150, transparent 65%),
+    repeating-linear-gradient(135deg, #ffffff06 0 1px, transparent 1px 8px),
+    #2f3d24;
+  color: #c8dfa9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.playlist-cover span {
+  font-size: 7px;
+  letter-spacing: 1.4px;
+}
+.playlist-card h3 {
+  margin: 15px 0 7px;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.playlist-card p {
+  font-size: 11px;
+  color: #9eae8e;
+  line-height: 1.7;
+}
+.playlist-description {
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+.playlist-form {
+  max-width: 600px;
+  background: #242d1d;
+  border: 1px solid #495b39;
+  padding: 25px;
+  border-radius: 8px;
+  margin: 25px 0;
+}
+.playlist-form h2 {
+  font-size: 20px;
+}
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.playlist-heading {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: 30px 0;
+}
+.playlist-heading > .playlist-cover {
+  width: 155px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+.playlist-heading > div:last-child {
+  min-width: 0;
+}
+.playlist-heading h1 {
+  overflow-wrap: anywhere;
+}
+.playlist-heading .page-description {
+  margin: 12px 0 18px;
+}
+.playlist-toolbar {
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 15px;
+}
+.library-tracks {
+  margin: 22px 0;
+}
+.library-track {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 17px 5px;
+  border-bottom: 1px solid var(--line);
+}
+.row-title {
+  flex: 1;
+  min-width: 0;
+}
+.row-title h3 {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.row-title p {
+  font-size: 11px;
+  color: #9ba88d;
+  margin-top: 7px;
+}
+.row-duration {
+  font-size: 11px;
+  color: #96a387;
+  margin: 0 10px;
+}
+.row-order {
+  display: flex;
+  gap: 4px;
+}
+.row-order button {
+  min-width: 32px;
+  min-height: 36px;
+}
+.row-play {
+  color: white;
+}
+.row-play svg {
+  filter: drop-shadow(0 1px 2px #000);
+}
+.delete-confirm {
+  background: #37281f;
+  border: 1px solid #70503b;
+  border-radius: 6px;
+  padding: 23px;
+  margin: 20px 0;
+}
+.delete-confirm h2 {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+.delete-confirm p {
+  font-size: 12px;
+  color: #c9b6a2;
+  line-height: 1.8;
+  margin: 13px 0 20px;
+}
+.danger-button {
+  background: #9a4736;
+  padding: 11px 16px;
+  border-radius: 5px;
+  color: white;
+  font-size: 12px;
+}
+.playlist-grid a:hover .playlist-cover {
+  border-color: #a9c285;
+}
+.library-page .message-state {
+  margin-top: 22px;
+}
+.library-page .message-state h3 {
+  margin-bottom: 10px;
+}
+@media (max-width: 1100px) {
+  .playlist-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sidebar-bottom {
+    padding-top: 30px;
+  }
+  .sidebar-bottom h3 {
+    font-size: 15px;
+  }
+  .sidebar-bottom p {
+    font-size: 11px;
+  }
+  .build-label {
+    font-size: 7px;
+  }
+}
+@media (max-width: 760px) {
+  .sidebar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+  }
+  .sidebar nav {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+    gap: 4px;
+  }
+  .sidebar nav a {
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px 2px;
+    font-size: 10px;
+  }
+  .account-menu {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+    max-width: 155px;
+  }
+  .account-menu small {
+    font-size: 8px;
+  }
+  .account-menu a {
+    gap: 8px;
+  }
+  .track-extras {
+    grid-column: 2;
+    margin-top: 0;
+    align-self: start;
+  }
+  .track-actions .icon-button {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .account-page {
+    padding-top: 35px;
+  }
+  .account-page h1 {
+    font-size: 29px;
+  }
+  .account-card {
+    padding: 23px;
+  }
+  .library-page > .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .library-page h1 {
+    font-size: 29px;
+  }
+  .favorites-banner {
+    padding: 22px 18px;
+    gap: 17px;
+  }
+  .favorites-banner h2 {
+    font-size: 19px;
+  }
+  .favorites-banner p {
+    font-size: 11px;
+  }
+  .playlist-grid {
+    gap: 20px 15px;
+  }
+  .playlist-cover span {
+    display: none;
+  }
+  .playlist-heading {
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .playlist-heading > .playlist-cover {
+    width: 90px;
+  }
+  .playlist-heading > .playlist-cover svg {
+    width: 42px;
+  }
+  .playlist-heading h1 {
+    font-size: 25px;
+  }
+  .playlist-heading .page-description {
+    font-size: 12px;
+  }
+  .playlist-heading .eyebrow {
+    font-size: 7px;
+  }
+  .library-track {
+    gap: 12px;
+  }
+  .library-track .mini {
+    width: 40px;
+    height: 40px;
+  }
+  .row-duration {
+    display: none;
+  }
+  .row-title h3 {
+    font-size: 13px;
+  }
+  .row-title p {
+    font-size: 10px;
+  }
+  .row-order {
+    gap: 0;
+  }
+  .row-order button {
+    min-width: 32px;
+  }
+  .playlist-form {
+    padding: 20px;
+  }
+  .playlist-toolbar .secondary-button {
+    font-size: 11px;
+  }
+  .library-page .message-state {
+    padding: 30px 18px;
+  }
+  .library-page .section-heading {
+    gap: 10px;
+  }
+  .track-card {
+    row-gap: 0;
+  }
+  .playlist-card h3 {
+    font-size: 14px;
+  }
+}

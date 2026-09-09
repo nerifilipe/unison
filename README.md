@@ -2,7 +2,7 @@
 
 A little space to get lost in sound. A music web application for a Computer Engineering portfolio.
 
-**Milestone 1:** backend-driven catalog, original synthetic demo audio, and a persistent player that keeps playing when navigating between Discover and About. Includes play/pause, seek, volume, local catalog filtering, loading, empty and recoverable error states. Accounts, uploads, favorites, playlists and synchronized rooms are future milestones.
+**Milestones 1–2:** backend-driven catalog, original synthetic demo audio, a persistent player, email/password accounts, favorites and private playlists. Includes play/pause, seek, volume, local catalog filtering, playlist editing/ordering and recoverable error states. Uploads and synchronized rooms are future milestones.
 
 ## Run locally
 
@@ -15,6 +15,10 @@ docker compose up -d --build
 ```
 
 Open **http://localhost:3000**. Click **Start listening**, navigate to **About Unison**, and confirm the player keeps playing. Audio starts only after a user gesture. Generated audio is deliberately simple ambient chords, not commercial music.
+
+To try the personal library, select **Sign in → Create account**, choose a display name, email and password (10–64 characters), then create a playlist in **Your library**. In **Discover**, use the heart to save a favorite and the list-plus button to add a track to a playlist. Open the playlist to rename it, edit its description, reorder/remove tracks or delete it. Use **Your account → Sign out** to end the session. Registration does not send email; verification and password recovery are not implemented yet.
+
+Existing milestone 1 installations upgrade with the same startup command. Flyway adds the account/library tables without deleting existing catalog data or audio. Sessions expire after 30 minutes idle or when the backend restarts; sign in again to restore access to persisted favorites/playlists.
 
 ```sh
 docker compose ps -a
@@ -61,7 +65,7 @@ On Windows use `.\mvnw.cmd spring-boot:run`. Use the Vite dev server for this ho
 
 ## Verify
 
-The backend Docker build runs its MVC contract tests through `mvn verify`. Separately: `cd backend` then `sh mvnw verify` (Windows: `.\mvnw.cmd verify`).
+The backend Docker build runs its MVC contract and security boundary tests through `mvn verify`. Separately: `cd backend` then `sh mvnw verify` (Windows: `.\mvnw.cmd verify`).
 
 With the Compose stack running:
 
@@ -75,17 +79,21 @@ npm run test:e2e
 
 On Linux, Playwright may require `npx playwright install --with-deps chromium`. The suite runs desktop and mobile Chromium profiles, checks all three media objects and HTTP byte ranges, plays real audio, verifies audio element identity and advancing playback across routes, seeks, changes volume, switches tracks and exercises catalog/media failure recovery. Failure-state tests intercept requests; the main playback test uses the real backend and storage. Screenshots/traces: `frontend/test-results/`; HTML report: `frontend/playwright-report/`.
 
+The library suite also registers unique `unison-e2e-…@example.test` accounts, verifies CSRF protection and ownership using independent sessions, and exercises favorites and playlist management in the browser. It leaves these disposable accounts in the local database. It does not use your own account or contact any email service.
+
 ## Structure
 
 ```text
 frontend/   React, TypeScript, Vite, Playwright
-backend/    Java 21, Spring Boot; catalog feature module and Flyway migrations
+backend/    Java 21, Spring Boot; catalog, identity, library and shared modules
 infra/      Nginx gateway and FFmpeg/audio seed container
 docs/       Project plan, audio provenance, architecture and verification notes
 scripts/    Original demo-audio generator and local smoke check
 ```
 
 See [project plan](docs/project-plan.md), [architecture](docs/architecture.md), [audio provenance](docs/audio-provenance.md) and [verification](docs/verification.md).
+
+Account/session behavior and the personal library API are documented in [personal library](docs/personal-library.md).
 
 ## Troubleshooting
 

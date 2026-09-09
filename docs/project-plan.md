@@ -12,8 +12,8 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 
 ## Milestones
 
-1. **Local foundation (current scope):** Docker Compose, database migrations, generated authorized demo audio in local S3 storage, backend catalog API, loading/empty/error states, persistent player, client-side navigation, automated end-to-end checks and run instructions.
-2. **Personal library:** accounts, authentication, favorites and playlists; authorization and ownership tests.
+1. **Local foundation (completed):** Docker Compose, database migrations, generated authorized demo audio in local S3 storage, backend catalog API, loading/empty/error states, persistent player, client-side navigation, automated end-to-end checks and run instructions.
+2. **Personal library (completed):** accounts, authentication, favorites and playlists; authorization and ownership tests.
 3. **Catalog ingestion:** authenticated uploads, validation, FFmpeg processing jobs, storage lifecycle and catalog search.
 4. **Listening rooms:** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
@@ -39,3 +39,18 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 ## Milestone 1 delivery
 
 Implemented with Spring Boot 4.1.1, Java 21, React 19, TypeScript, Vite 7, PostgreSQL 17 and MinIO. The frontend includes Discover, About, a local filter over backend results and a persistent player; later product features remain unimplemented. FFmpeg generates three one-minute synthetic audio assets. See `verification.md` for acceptance evidence and `../README.md` for startup, development and test commands.
+
+## Milestone 2 acceptance criteria
+
+- Register with display name, normalized unique email and a validated password stored as a BCrypt hash; sign in/out using server sessions and HttpOnly cookies.
+- Protect every mutation, including login and registration, with CSRF tokens. Rotate session identifiers at login; invalidate the session on logout. Never store passwords or auth tokens in browser local storage.
+- Keep discovery public; show clear sign-in prompts for personal features.
+- Persist favorites and private playlists in PostgreSQL. Support playlist creation, renaming, description, deletion, adding/removing tracks and reordering.
+- Enforce ownership in backend queries and lock a playlist while changing its contents. Return 404 for another account's playlist.
+- Preserve music across authentication and library navigation. Provide loading, empty, validation and recoverable failure states.
+- Verify isolated accounts, missing CSRF, expired/logged-out sessions, persistence after reload, duplicate registration and playlist/favorite flows alongside milestone 1 regressions.
+- Password reset, email verification, social login, public sharing, uploads and listening rooms remain later work. Local sessions expire after 30 minutes idle and on backend restart.
+
+## Milestone 2 delivery
+
+Completed on 2026-09-09. Added Spring Security session authentication with CSRF and BCrypt, account-scoped favorites, and private playlist CRUD/membership/ordering. The responsive interface provides account, library and favorites pages without remounting the player. Flyway upgrades the existing database. Validation: 4 backend tests and 18 desktop/mobile end-to-end tests passed; see `verification.md`. Milestone 3 is planned, not started.

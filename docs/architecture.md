@@ -1,4 +1,4 @@
-# Milestone 1 architecture
+# Unison architecture
 
 ```mermaid
 flowchart LR
@@ -14,7 +14,7 @@ flowchart LR
 
 The initial monolith groups `Track`, `TrackRepository`, `CatalogService`, `CatalogController` and public `TrackDto` in `dev.unison.catalog`. Entities and repositories are package-private. The controller depends on the service; the service owns a read-only transaction and maps entities to DTOs. `GET /api/tracks` returns an ordered JSON array, including an empty array if there are no tracks. Credentials and entity implementation details are never included.
 
-Flyway creates the table and inserts stable IDs and object keys. Hibernate validates the schema. Future identity, library, ingestion and room modules will be separate feature packages. They are intentionally absent from milestone 1.
+Flyway creates the schema and inserts stable track IDs/object keys. Hibernate validates the catalog schema. Milestone 2 adds `identity`, `library` and `shared` feature packages; ingestion and rooms remain future work. See [personal library](personal-library.md) for ownership, transaction and session boundaries.
 
 ## Media delivery
 

@@ -15,9 +15,14 @@ import {
   Radio,
   Search,
   Waves,
+  Heart,
+  Library,
 } from "lucide-react";
 import { usePlayer } from "./Player";
 import { formatTime, type Track } from "./types";
+import { AccountGate, AccountMenu, AccountPage } from "./Auth";
+import { FavoritesPage, LibraryPage, PlaylistPage } from "./LibraryPages";
+import { TrackActions } from "./TrackActions";
 
 function Discover() {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -234,7 +239,10 @@ function Discover() {
                     </div>
                     <span>{formatTime(track.durationSeconds)}</span>
                   </div>
-                  <span className="genre">{track.genre}</span>
+                  <div className="track-extras">
+                    <span className="genre">{track.genre}</span>
+                    <TrackActions track={track} />
+                  </div>
                 </article>
               ))}
             </div>
@@ -298,8 +306,9 @@ function About() {
             <h2>Small beginning. Clear direction.</h2>
             <p>
               A React interface, a modular Spring Boot API, PostgreSQL metadata
-              and S3-compatible audio storage. Accounts, playlists and
-              synchronized listening rooms will follow in later milestones.
+              and S3-compatible audio storage. Save favorites and make private
+              playlists with your account. Uploads and synchronized listening
+              rooms will follow in later milestones.
             </p>
           </section>
         </div>
@@ -334,7 +343,16 @@ export default function App() {
             <Info size={19} />
             About Unison
           </NavLink>
+          <NavLink to="/favorites">
+            <Heart size={19} />
+            Favorites
+          </NavLink>
+          <NavLink to="/library">
+            <Library size={19} />
+            Your library
+          </NavLink>
         </nav>
+        <AccountMenu />
         <div className="sidebar-bottom">
           <div className="sidebar-symbol">
             <Waves size={30} />
@@ -350,13 +368,38 @@ export default function App() {
             lost in sound.
           </p>
           <ArrowDown size={19} />
-          <span className="build-label">THE BEGINNING · V0.1</span>
+          <span className="build-label">MAKE IT YOURS · MILESTONE 02</span>
         </div>
       </aside>
       <main id="main">
         <Routes>
           <Route path="/" element={<Discover />} />
           <Route path="/about" element={<About />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/favorites"
+            element={
+              <AccountGate>
+                <FavoritesPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path="/library"
+            element={
+              <AccountGate>
+                <LibraryPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path="/library/:id"
+            element={
+              <AccountGate>
+                <PlaylistPage />
+              </AccountGate>
+            }
+          />
           <Route
             path="*"
             element={

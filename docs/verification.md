@@ -1,4 +1,20 @@
-# Milestone 1 verification
+# Unison verification
+
+## Milestone 2 — 2026-09-09
+
+- **Backend:** `mvnw.cmd -B -ntp verify` passed 4 tests (2 catalog contracts + 2 security boundary tests). The Docker build also ran all 4 successfully.
+- **Frontend:** TypeScript/Vite production build passed in the Node 24 container; host build passed as well.
+- **End-to-end:** final `npx playwright test` passed **18 tests** across desktop and mobile Chromium profiles, including all milestone 1 regressions.
+- **Migration:** Flyway versions 1 and 2 both succeeded on the existing database. The catalog retained its three tracks. Test accounts have stored password hashes, with no password/hash fields in account responses.
+- **Authentication:** registration, normalized duplicate-email rejection, weak-password rejection, invalid login, HttpOnly/SameSite cookie attributes, login session-ID rotation, logout and rejection of a copied old cookie verified against the real backend.
+- **Authorization:** anonymous library access returns 401; mutations without CSRF return 403. A second account cannot read, rename, delete, add/remove tracks or reorder the first account's playlist (404). Favorites and playlist listings are isolated.
+- **Library:** create/edit/delete with cancellation, add/remove/idempotent additions, reordering, duplicate/invalid order rejection, concurrent additions and persistence after reload/relogin passed. Failed favorite writes retain state and can be retried. Temporary library failures recover; an expired session clears private content.
+- **Player:** the same audio element continues playing through registration/login and SPA navigation. Existing seek/volume/media-range checks still pass.
+- **Visual QA:** inspected desktop/mobile playlist captures; no horizontal overflow. Mobile navigation exposes all four sections and account access. Sidebar scrolling supports shorter desktop windows.
+
+Tests register disposable `unison-e2e-…@example.test` accounts in the local database and send no email. Browser coverage uses Chromium emulation, not physical mobile devices or Safari/Firefox. Password recovery, email verification and production authentication abuse controls remain outside this milestone. See [personal library](personal-library.md).
+
+## Milestone 1 baseline
 
 Verified locally on 2026-09-09, Windows + Docker Desktop/WSL 2.
 
