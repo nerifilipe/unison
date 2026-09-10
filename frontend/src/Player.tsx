@@ -276,6 +276,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             <span>{formatTime(time)}</span>
             <input
               aria-label="Seek"
+              aria-valuetext={`${Math.round(time)} seconds of ${Math.round(duration || track?.durationSeconds || 0)} seconds`}
               type="range"
               min="0"
               max={duration || track?.durationSeconds || 60}
@@ -295,6 +296,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           <Volume2 size={19} />
           <input
             aria-label="Volume"
+            aria-valuetext={`${Math.round(volume * 100)} percent`}
             type="range"
             min="0"
             max="1"

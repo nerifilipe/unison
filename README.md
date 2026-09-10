@@ -89,9 +89,11 @@ The library and ingestion suites register unique `unison-e2e-…@example.test` a
 
 Optional queue recovery check, from the repository root with Node 22.12+ and Docker on PATH: `node scripts/verify-ingestion-recovery.mjs`. It simulates expired processing leases only on a disposable job it creates, verifies recovery and the retry limit, then removes the job. Set `DOCKER_BIN` to the Docker executable path if necessary.
 
-Room tests use independent browser sessions, real WebSockets and generated demo audio, with a deliberate guest clock offset. They cover host controls, votes, conflicting commands, reconnect/reload, origins, logout and the real 30-second host-away timeout. The full suite has 30 tests across desktop/mobile profiles; room state is temporary and backend tests verify its concurrency/lifecycle rules.
+Room tests use independent browser sessions, real WebSockets and generated demo audio, with a deliberate guest clock offset. They cover host controls, votes, conflicting commands, reconnect/reload, origins, logout and the real 30-second host-away timeout. Room state is temporary and backend tests verify its concurrency/lifecycle rules.
 
 ## Continuous integration
+
+The browser suite also checks accessibility (axe, keyboard focus and 320px reflow) and loading budgets (compressed assets, safe caching and deferred audio). See [accessibility and performance](docs/accessibility-performance.md) for measurements, reproduction and coverage limits. There are 38 desktop/mobile tests in total.
 
 GitHub Actions runs the frontend build, backend tests and full-stack desktop/mobile browser tests on every push and pull request. CI starts its own Docker stack with generated audio and keeps test reports and service logs for seven days. No repository secrets are needed. See [CI checks and troubleshooting](docs/continuous-integration.md).
 

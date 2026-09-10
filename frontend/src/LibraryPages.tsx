@@ -259,6 +259,7 @@ export function FavoritesPage() {
         {status === "ready" &&
           (favorites.length ? (
             <div className="library-tracks">
+              <h2 className="sr-only">Favorite tracks</h2>
               {favorites.map((track) => (
                 <div className="library-track" key={track.id}>
                   <PlayTrack track={track} />
@@ -276,7 +277,7 @@ export function FavoritesPage() {
           ) : (
             <div className="message-state">
               <Heart />
-              <h3>Nothing saved. Yet.</h3>
+              <h2>Nothing saved. Yet.</h2>
               <p>Tap the heart beside a track to keep it here.</p>
               <Link className="primary-button" to="/">
                 Explore sounds
@@ -482,6 +483,7 @@ function PlaylistContent({ id }: { id: string }) {
         )}
         {playlist.tracks.length ? (
           <div className="library-tracks" aria-busy={busy}>
+            <h2 className="sr-only">Playlist tracks</h2>
             {playlist.tracks.map((track, index) => (
               <div
                 className="library-track playlist-track"
@@ -534,7 +536,7 @@ function PlaylistContent({ id }: { id: string }) {
         ) : (
           <div className="message-state">
             <ListMusic />
-            <h3>Room for your next favorite.</h3>
+            <h2>Room for your next favorite.</h2>
             <p>Find a sound in Discover and choose “Add to playlist”.</p>
             <Link className="text-link" to="/">
               Find a sound →

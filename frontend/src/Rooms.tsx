@@ -342,7 +342,10 @@ export function RoomsPage() {
                   </article>
                 ))}
               </section>
-              <aside className="room-members room-card">
+              <aside
+                className="room-members room-card"
+                aria-label="Room listeners"
+              >
                 <h2>In good company</h2>
                 {state.members.map((member) => (
                   <div className="room-member" key={member.id}>
@@ -391,6 +394,7 @@ function RoomSeek({
       Room seek
       <input
         aria-label="Room seek"
+        aria-valuetext={`${Math.round(draft ?? Math.min(position, duration))} seconds of ${Math.round(duration)} seconds`}
         type="range"
         min={0}
         max={duration}

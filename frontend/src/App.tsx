@@ -1,5 +1,11 @@
-import { useEffect, useState } from "react";
-import { NavLink, Route, Routes, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import {
+  NavLink,
+  Route,
+  Routes,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import {
   ArrowUpRight,
   AudioLines,
@@ -312,12 +318,41 @@ function About() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const previousPath = useRef(pathname);
+  const main = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const title =
+      pathname === "/"
+        ? "Discover"
+        : pathname === "/about"
+          ? "About Unison"
+          : pathname === "/account"
+            ? "Your account"
+            : pathname === "/favorites"
+              ? "Favorites"
+              : pathname === "/library"
+                ? "Your library"
+                : pathname.startsWith("/library/")
+                  ? "Playlist"
+                  : pathname === "/uploads"
+                    ? "Upload music"
+                    : pathname.startsWith("/rooms")
+                      ? "Listening rooms"
+                      : "Page not found";
+    document.title = `${title} · Unison`;
+    if (previousPath.current !== pathname) {
+      main.current?.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+      previousPath.current = pathname;
+    }
+  }, [pathname]);
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <aside className="sidebar">
+      <aside className="sidebar" aria-label="App navigation">
         <NavLink className="brand" to="/" aria-label="Unison home">
           <AudioLines size={29} strokeWidth={2.7} />
           <span>
@@ -355,7 +390,7 @@ export default function App() {
           <AccountMenu />
         </div>
       </aside>
-      <main id="main">
+      <main id="main" ref={main} tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Discover />} />
           <Route path="/about" element={<About />} />

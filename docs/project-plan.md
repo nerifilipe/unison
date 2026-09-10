@@ -18,6 +18,12 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 4. **Listening rooms (completed):** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
 
+## Milestone 5 — accessibility and loading review
+
+Review keyboard navigation, dialogs, heading hierarchy, form semantics, contrast, 320px reflow and initial network cost. Add accessibility and asset-budget checks to the browser suite. Preserve playback/navigation and protect dynamic responses from static caching. Record measurements and manual coverage limits in `accessibility-performance.md`; deployment remains subsequent work.
+
+Implemented and locally verified: production build passed; all 38 browser tests passed, followed by a focused accessibility/performance rerun covering the final empty-state headings. Automated scans reported no violations in the covered states, and the measured initial JavaScript transfer was about 68% smaller with gzip. Manual screen-reader and physical-device verification remain open and are explicitly documented.
+
 ## Milestone 5 — CI foundation
 
 Add GitHub Actions checks for frontend compilation, backend verification and full-stack Playwright execution against a fresh Docker Compose environment. Include readiness checks, bounded execution, dependency caches, diagnostic artifacts and disposable resource cleanup. Document local reproduction and hosted-run verification. Deployment, broader accessibility/performance review and branch-rule configuration remain subsequent work.

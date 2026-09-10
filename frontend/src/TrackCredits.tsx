@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
+import { useModal } from "./useModal";
 import { Info, X } from "lucide-react";
 import type { Track } from "./types";
 
@@ -19,20 +20,20 @@ export function TrackCredits({ track }: { track: Track }) {
 }
 function CreditsDialog({ track, close }: { track: Track; close: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    dialog.current?.showModal();
-  }, []);
+  const titleId = useId();
+  useModal(dialog);
   return (
     <dialog
       ref={dialog}
       className="playlist-dialog"
+      aria-labelledby={titleId}
       onCancel={close}
       onClick={(event) => {
         if (event.target === dialog.current) close();
       }}
     >
       <div className="dialog-title">
-        <h2>Track credits</h2>
+        <h2 id={titleId}>Track credits</h2>
         <button
           className="icon-button"
           aria-label="Close credits"

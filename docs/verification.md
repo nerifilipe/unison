@@ -91,6 +91,10 @@ The main playback test does not mock the backend or media. Error/empty/loading t
 
 Validated `.github/workflows/ci.yml` with actionlint, built the frontend, and ran the Maven Wrapper successfully (11 tests, zero failures/errors/skips). Started the CI Compose override with fresh `unison-ci` volumes, confirmed all three generated tracks support HTTP 206, and ran all 30 desktop/mobile Playwright tests with `CI=true`, two workers and `UNISON_URL=http://localhost:13000`: all passed without retries. This validates the application commands and isolated startup on the local machine; GitHub-hosted Ubuntu runner execution and artifact delivery await the first push. Only the disposable CI stack is removed after validation; the normal app on port 3000 remains running.
 
+## Accessibility and loading review
+
+Added eight desktop/mobile checks to the existing suite (38 total): axe scans, keyboard focus and asset delivery budgets. The complete suite passed; final empty-state heading changes were followed by a successful eight-test focused rerun. Build and TypeScript checks passed. The 320px private-page scan verifies reflow without horizontal overflow. Local cold-load measurements recorded 90,654 encoded JavaScript bytes versus 287,237 decoded bytes, with no audio request before play. See `accessibility-performance.md` for scope, budgets and unverified manual coverage. An earlier run was interrupted by localhost connection failures; it was rerun after service availability returned.
+
 ## Repeat
 
 Run the commands in the root README. Screenshots and HTML reports are generated under `frontend/test-results/` and `frontend/playwright-report/` (ignored by Git). `scripts/smoke.ps1` provides the quick API/media check.

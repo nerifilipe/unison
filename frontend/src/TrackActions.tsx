@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { useModal } from "./useModal";
 import { Link } from "react-router-dom";
 import { Heart, ListPlus, X } from "lucide-react";
 import { api, message } from "./api";
@@ -79,14 +80,13 @@ export function TrackActions({ track }: { track: Track }) {
 
 function AddToPlaylist({ track, close }: { track: Track; close: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  useModal(ref);
   const [lists, setLists] = useState<PlaylistSummary[]>([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [revision, setRevision] = useState(0);
-  useEffect(() => {
-    ref.current?.showModal();
-  }, []);
   useEffect(() => {
     let active = true;
     setStatus("loading");
@@ -111,13 +111,14 @@ function AddToPlaylist({ track, close }: { track: Track; close: () => void }) {
     <dialog
       ref={ref}
       className="playlist-dialog"
+      aria-labelledby={titleId}
       onCancel={close}
       onClick={(event) => {
         if (event.target === ref.current) close();
       }}
     >
       <div className="dialog-title">
-        <h2>Add to playlist</h2>
+        <h2 id={titleId}>Add to playlist</h2>
         <button
           className="icon-button"
           aria-label="Close playlist picker"

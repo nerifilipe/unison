@@ -277,6 +277,7 @@ export function AccountPage() {
               <input
                 type="password"
                 autoComplete={register ? "new-password" : "current-password"}
+                aria-describedby={register ? "password-hint" : undefined}
                 minLength={register ? 10 : undefined}
                 maxLength={64}
                 required
@@ -284,7 +285,9 @@ export function AccountPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
               {register && (
-                <small>10–64 characters. Use a unique password.</small>
+                <small id="password-hint">
+                  10–64 characters. Use a unique password.
+                </small>
               )}
             </label>
             {error && (

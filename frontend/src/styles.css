@@ -64,7 +64,7 @@ button svg {
 input[type="range"] {
   accent-color: var(--accent);
   cursor: pointer;
-  height: 4px;
+  height: 24px;
 }
 input[type="range"]:disabled {
   cursor: default;
@@ -486,6 +486,41 @@ h2 {
 .track-art:hover {
   filter: brightness(1.12);
 }
+.track-art::after {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  transform: none;
+  background: #10111499;
+  z-index: 0;
+}
+.track-art > span {
+  position: relative;
+  z-index: 1;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+main:focus {
+  outline: none;
+}
+button,
+a,
+input,
+select,
+textarea {
+  scroll-margin-block: 16px 180px;
+}
 .cover-top {
   font-size: 9px;
   letter-spacing: 0.3px;
@@ -742,6 +777,7 @@ h2 {
   color: var(--accent);
   margin-bottom: 14px;
 }
+.message-state h2,
 .message-state h3 {
   font-size: 18px;
 }
@@ -885,6 +921,14 @@ h2 {
   }
   .search {
     width: 100%;
+  }
+  .search input,
+  main .form-stack input:not([type="checkbox"]),
+  main .form-stack textarea,
+  main .form-stack select,
+  main .room-search input,
+  main .room-invite input {
+    font-size: 16px;
   }
   .page-content {
     padding: 26px 20px 32px;
