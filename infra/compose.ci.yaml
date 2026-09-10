@@ -1,0 +1,12 @@
+# Requires Docker Compose 2.24.4+ for !override. Keep CI data and ports isolated.
+services:
+  db:
+    ports: !reset []
+  storage:
+    ports: !reset []
+  backend:
+    ports: !reset []
+    environment:
+      ROOM_ALLOWED_ORIGINS: http://localhost:13000,http://127.0.0.1:13000
+  frontend:
+    ports: !override ["127.0.0.1:13000:80"]

@@ -18,6 +18,12 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 4. **Listening rooms (completed):** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
 
+## Milestone 5 — CI foundation
+
+Add GitHub Actions checks for frontend compilation, backend verification and full-stack Playwright execution against a fresh Docker Compose environment. Include readiness checks, bounded execution, dependency caches, diagnostic artifacts and disposable resource cleanup. Document local reproduction and hosted-run verification. Deployment, broader accessibility/performance review and branch-rule configuration remain subsequent work.
+
+Implemented on 2026-09-10. Workflow validation with actionlint passed, the frontend production build passed, Maven verified 11 backend tests, and all 30 Playwright tests passed with CI settings against newly created `unison-ci` volumes on port 13000. The ordinary local app and its data were preserved. Hosted GitHub execution remains to be confirmed after this workflow is committed and pushed. See `continuous-integration.md` for checks, artifacts and reproduction commands.
+
 ## Frontend refinement — 2026-09-10
 
 Before milestone 5, redesign the complete interface around music and everyday actions: neutral charcoal surfaces, a restrained lavender accent, clear typography, compact navigation and consistent controls across Discover, accounts, library, uploads, rooms and the persistent player. Replace development badges, milestone labels, fictitious cover branding and infrastructure-oriented product copy. The spotlight uses actual backend catalog metadata; search remains server-backed.

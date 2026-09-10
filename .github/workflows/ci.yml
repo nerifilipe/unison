@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.16.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - run: sh mvnw -B -ntp verify
+      - name: Save backend test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backend-test-reports
+          path: backend/target/surefire-reports/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  integration:
+    name: Full-stack tests
+    needs: [frontend, backend]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      COMPOSE_PROJECT_NAME: unison-ci
+      COMPOSE_FILE: compose.yaml:infra/compose.ci.yaml
+      UNISON_URL: http://localhost:13000
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.16.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install browser test dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Install Chromium and system dependencies
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Validate Compose configuration
+        run: docker compose config --quiet
+      - name: Build application images
+        run: |
+          mkdir -p ci-artifacts
+          docker compose build 2>&1 | tee ci-artifacts/build.log
+      - name: Start isolated application stack
+        run: docker compose up -d --wait --wait-timeout 180
+      - name: Wait for the HTTP gateway
+        run: curl --fail --silent --show-error --retry 12 --retry-delay 2 --retry-all-errors --max-time 5 http://localhost:13000/api/tracks
+      - name: Check catalog and audio byte ranges
+        shell: pwsh
+        run: ./scripts/smoke.ps1 -BaseUrl http://localhost:13000
+      - name: Run desktop and mobile browser tests
+        working-directory: frontend
+        run: npx playwright test --workers=2
+      - name: Collect service diagnostics
+        if: always()
+        run: |
+          mkdir -p ci-artifacts
+          docker compose ps -a > ci-artifacts/services.txt
+          docker compose logs --no-color --timestamps > ci-artifacts/compose.log 2>&1
+      - name: Save browser reports and service logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: full-stack-test-results
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+            ci-artifacts/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Remove disposable CI resources
+        if: always()
+        run: docker compose down --volumes --remove-orphans

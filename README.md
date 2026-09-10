@@ -91,6 +91,10 @@ Optional queue recovery check, from the repository root with Node 22.12+ and Doc
 
 Room tests use independent browser sessions, real WebSockets and generated demo audio, with a deliberate guest clock offset. They cover host controls, votes, conflicting commands, reconnect/reload, origins, logout and the real 30-second host-away timeout. The full suite has 30 tests across desktop/mobile profiles; room state is temporary and backend tests verify its concurrency/lifecycle rules.
 
+## Continuous integration
+
+GitHub Actions runs the frontend build, backend tests and full-stack desktop/mobile browser tests on every push and pull request. CI starts its own Docker stack with generated audio and keeps test reports and service logs for seven days. No repository secrets are needed. See [CI checks and troubleshooting](docs/continuous-integration.md).
+
 ## Structure
 
 ```text

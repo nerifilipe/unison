@@ -87,6 +87,10 @@ The main playback test does not mock the backend or media. Error/empty/loading t
 - Kept the generated catalog tracks and existing uploaded music as requested. Removed development labels and infrastructure instructions from the interface; operational constraints remain documented here and in the feature docs.
 - The first test run lost access to localhost when services stopped; the completed rerun above used healthy services. Browser coverage remains Chromium emulation, not physical devices.
 
+## CI foundation — 2026-09-10
+
+Validated `.github/workflows/ci.yml` with actionlint, built the frontend, and ran the Maven Wrapper successfully (11 tests, zero failures/errors/skips). Started the CI Compose override with fresh `unison-ci` volumes, confirmed all three generated tracks support HTTP 206, and ran all 30 desktop/mobile Playwright tests with `CI=true`, two workers and `UNISON_URL=http://localhost:13000`: all passed without retries. This validates the application commands and isolated startup on the local machine; GitHub-hosted Ubuntu runner execution and artifact delivery await the first push. Only the disposable CI stack is removed after validation; the normal app on port 3000 remains running.
+
 ## Repeat
 
 Run the commands in the root README. Screenshots and HTML reports are generated under `frontend/test-results/` and `frontend/playwright-report/` (ignored by Git). `scripts/smoke.ps1` provides the quick API/media check.
