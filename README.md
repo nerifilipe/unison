@@ -1,8 +1,56 @@
 # Unison
 
-A little space to get lost in sound. A music web application for a Computer Engineering portfolio.
+A little space to get lost in sound.
 
-**Milestones 1–4:** backend-driven catalog/search, a persistent player, accounts, favorites, private playlists, authorized audio uploads and synchronized listening rooms. A durable queue validates/converts uploads with FFmpeg. Rooms provide host controls, a shared queue, votes and reconnect recovery. Public credits are visible from each track's information button.
+A full-stack music application with a persistent player, personal libraries and synchronized listening rooms. Built as a Computer Engineering portfolio project with React, Spring Boot and PostgreSQL.
+
+[Installation guide](docs/local-setup.md) · [Architecture](docs/architecture.md) · [CI checks](https://github.com/nerifilipe/unison/actions/workflows/ci.yml) · [MIT license](LICENSE)
+
+![Unison Discover on desktop, with the catalog and persistent audio player](docs/images/discover.png)
+
+## Features
+
+- **Discover and listen:** backend catalog search, track credits, playback controls, seeking and volume. Music continues while navigating between pages.
+- **Make it yours:** accounts, favorites and private playlists with editable details and track ordering.
+- **Share your audio:** validated uploads, FFmpeg conversion, processing status and separate private permission notes/public credits.
+- **Listen together:** host-controlled playback, shared queues, votes and WebSocket synchronization with reconnect recovery.
+- **Use any screen:** responsive layouts, keyboard navigation, labeled controls and automated accessibility checks.
+
+## Screenshots
+
+### Your library
+
+Organize tracks into playlists and keep listening while browsing.
+
+![Quiet hours playlist with three tracks and the persistent player](docs/images/playlist.png)
+
+### Listening rooms
+
+Queue music together, see who is listening and let the host control playback.
+
+![After hours listening room with two members and a shared track queue](docs/images/room.png)
+
+### On mobile
+
+<img src="docs/images/mobile.png" alt="Unison Discover on a mobile screen with navigation and audio controls" width="390">
+
+Screenshots show the running local application with example library/room data. Catalog contents depend on the installation; third-party recordings visible in screenshots are not bundled with the repository. See [how to refresh screenshots](docs/screenshots.md).
+
+## Technology
+
+| Layer | Technology |
+| --- | --- |
+| Interface | React 19, TypeScript, Vite, React Router |
+| API and authentication | Java 21, Spring Boot, Spring Security, server sessions and CSRF protection |
+| Persistence | PostgreSQL, JPA and Flyway migrations |
+| Audio | S3-compatible MinIO storage and FFmpeg processing |
+| Real-time rooms | Authenticated WebSockets and server-authoritative playback |
+| Local runtime | Docker Compose and an Nginx same-origin gateway |
+| Verification | Backend tests, Playwright, axe and GitHub Actions |
+
+## Scope
+
+Designed for local installation with generated, redistributable sample audio. Accounts and libraries persist in Docker volumes; listening rooms are temporary and end when the backend restarts. Email verification and password recovery are not implemented. See the [project plan](docs/project-plan.md) for delivery history and boundaries.
 
 ## Run locally
 
