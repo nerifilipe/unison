@@ -25,6 +25,7 @@ import { AccountGate, AccountMenu, AccountPage } from "./Auth";
 import { FavoritesPage, LibraryPage, PlaylistPage } from "./LibraryPages";
 import { TrackActions } from "./TrackActions";
 import { UploadsPage } from "./Uploads";
+import { RoomsPage } from "./Rooms";
 
 function Discover() {
   const [params] = useSearchParams();
@@ -314,8 +315,8 @@ function About() {
               A React interface, a modular Spring Boot API, PostgreSQL metadata
               and S3-compatible audio storage. Save favorites and make private
               playlists with your account, or share authorized audio from your
-              studio. Synchronized listening rooms will follow in a later
-              milestone.
+              studio. Invite friends to a listening room, build a shared queue
+              and vote for what plays next.
             </p>
           </section>
         </div>
@@ -364,6 +365,10 @@ export default function App() {
           Upload audio
         </NavLink>
         <AccountMenu />
+        <NavLink className="rooms-nav" to="/rooms">
+          <Radio size={17} />
+          Listening rooms
+        </NavLink>
         <div className="sidebar-bottom">
           <div className="sidebar-symbol">
             <Waves size={30} />
@@ -379,7 +384,7 @@ export default function App() {
             lost in sound.
           </p>
           <ArrowDown size={19} />
-          <span className="build-label">SHARE YOUR SOUND · MILESTONE 03</span>
+          <span className="build-label">LISTEN TOGETHER · MILESTONE 04</span>
         </div>
       </aside>
       <main id="main">
@@ -387,6 +392,22 @@ export default function App() {
           <Route path="/" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/rooms"
+            element={
+              <AccountGate>
+                <RoomsPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path="/rooms/:id"
+            element={
+              <AccountGate>
+                <RoomsPage />
+              </AccountGate>
+            }
+          />
           <Route
             path="/uploads"
             element={

@@ -15,7 +15,7 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 1. **Local foundation (completed):** Docker Compose, database migrations, generated authorized demo audio in local S3 storage, backend catalog API, loading/empty/error states, persistent player, client-side navigation, automated end-to-end checks and run instructions.
 2. **Personal library (completed):** accounts, authentication, favorites and playlists; authorization and ownership tests.
 3. **Catalog ingestion (completed):** authenticated uploads, validation, FFmpeg processing jobs, storage lifecycle and catalog search.
-4. **Listening rooms:** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
+4. **Listening rooms (completed):** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
 
 ## Milestone 1 acceptance criteria
@@ -68,3 +68,18 @@ Completed on 2026-09-09. Added Spring Security session authentication with CSRF 
 ## Milestone 3 delivery
 
 Completed on 2026-09-10. Added the ingestion module, V3 migration, private source storage, a durable processing/cleanup queue, bounded FFmpeg conversion and authenticated upload/retry/removal UI. Catalog search now queries the backend. Validation: 7 backend tests, 22 desktop/mobile end-to-end tests, and an independent expired-lease recovery check passed. Documentation includes API, lifecycle and remaining operational limits in `ingestion.md`. Listening rooms are the next milestone.
+
+## Milestone 4 acceptance criteria
+
+- Add explicit public credits to uploads, editable by their owner and visible from catalog/library/player. Keep existing private provenance notes private; do not infer licenses or publish them automatically.
+- Signed-in users create unlisted rooms and join via an invitation link. The creator is the host; leaving as host ends the room. Other members can leave and rejoin.
+- Host controls play/pause/seek/skip. Members add catalog tracks and cast at most one vote per queue entry; votes rank the next track with stable insertion-order ties. Serialize room changes and reject stale host commands.
+- Send authoritative snapshots over authenticated, origin-restricted WebSockets; use CSRF-protected HTTP mutations. Recheck session validity and room membership while connected.
+- Keep one persistent audio element across navigation, estimate server clock offset, correct drift, handle autoplay permission explicitly, pause on disconnection, and resynchronize after reconnect. Ordinary catalog play cannot silently override room playback.
+- Advance the queue on the server when a track ends. Pause after 30 seconds without the host; expire inactive rooms after 30 minutes. Bound rooms/members/queues/connections.
+- Rooms are ephemeral, single-backend-instance state for this milestone. A backend restart ends rooms; accounts, uploads and libraries remain durable. Document this boundary.
+- Verify two independent browsers, host/member authorization, votes and concurrent commands, reconnect, room end, session invalidation, mobile layout and prior regressions using generated demo audio.
+
+## Milestone 4 delivery
+
+Completed on 2026-09-10. Added unlisted authenticated listening rooms with server-authoritative playback, shared queues, vote ordering, host controls, WebSocket snapshots/clock estimation, reconnect/reload recovery and host-away pause. The existing audio element remains persistent during navigation. V4 adds separate public credits, editable by upload owners and visible through track information dialogs; existing private notes remain private. Docker builds and 11 backend tests passed. All 30 desktop/mobile end-to-end tests passed, including real playback in independent sessions, a guest clock offset by two minutes, stale command conflicts, hostile origins, logout invalidation and live host-presence timeout. See `listening-rooms.md` and `verification.md`. Rooms intentionally remain ephemeral and limited to one backend instance. Portfolio release work is next.

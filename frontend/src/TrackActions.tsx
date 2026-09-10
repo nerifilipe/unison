@@ -6,6 +6,7 @@ import { useAuth } from "./Auth";
 import { useLibrary } from "./LibraryContext";
 import type { Track } from "./types";
 import type { PlaylistSummary } from "./libraryTypes";
+import { TrackCredits } from "./TrackCredits";
 
 export function TrackActions({ track }: { track: Track }) {
   const { user } = useAuth();
@@ -16,17 +17,21 @@ export function TrackActions({ track }: { track: Track }) {
   const favorite = favorites.some((value) => value.id === track.id);
   if (!user)
     return (
-      <Link
-        className="save-prompt"
-        to="/account?next=discover"
-        aria-label={`Sign in to save ${track.title}`}
-      >
-        <Heart size={16} />
-        <span>Save</span>
-      </Link>
+      <div className="track-actions">
+        <TrackCredits track={track} />
+        <Link
+          className="save-prompt"
+          to="/account?next=discover"
+          aria-label={`Sign in to save ${track.title}`}
+        >
+          <Heart size={16} />
+          <span>Save</span>
+        </Link>
+      </div>
     );
   return (
     <div className="track-actions">
+      <TrackCredits track={track} />
       <button
         className="icon-button"
         aria-label={`${favorite ? "Remove" : "Save"} ${track.title} ${favorite ? "from" : "to"} favorites`}

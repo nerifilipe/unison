@@ -1,5 +1,20 @@
 # Unison verification
 
+## Milestone 4 — 2026-09-10
+
+- **Builds:** final Docker Compose build/start succeeded. The backend build ran **11 passing tests**, including 4 room service tests for timeline/concurrency/lifecycle. TypeScript/Vite production builds passed.
+- **Full regression:** `npx playwright test --workers=2` passed **30 tests** in desktop/mobile Chromium profiles. `scripts/smoke.ps1` passed all three seeded WAV range checks; `git diff --check` passed.
+- **Two-client playback:** independent host/guest accounts joined via invitation, added/voted tracks, synchronized real audio, followed host pause/seek, advanced automatically at track end, and retained the same audio element during navigation. The guest clock was deliberately offset by two minutes; sampled playback difference remained below the test's 1.2-second threshold.
+- **Reconnect/reload:** forced socket closure plus offline mode paused guest audio; restoring connectivity resynchronized playback. Reload restored account-scoped room membership, with an explicit audio-enable gesture.
+- **Authorization:** nonmembers cannot read/add (404); members cannot control playback/remove queue items (403); missing CSRF fails (403); hostile WebSocket origins fail (403). Concurrent repeated votes produce one vote. Concurrent host commands using the same revision produce one success and one conflict (409).
+- **Session/lifecycle:** ending the room stops the guest. Logout invalidates an already-open WebSocket and clears the signed-in UI. A real socket that receives broadcasts but sends no pings causes the server to pause at approximately 30 seconds, verified in both browser profiles. Backend tests also cover inactivity expiry and deleted catalog tracks.
+- **Public credits:** upload, publication, owner editing and public dialog display passed. Public DTOs omit the private permission note. Another account cannot change credits (404), missing CSRF fails (403), and excessive length fails (400). Legacy notes were not copied into public fields.
+- **Visual QA:** desktop/mobile room captures inspected; responsive queue, host controls, invitation and member list fit without horizontal overflow. Added a styled end-room button and explicit accessible label for the prefilled credits editor.
+
+The tests caught and resolved duplicate seek events generating conflicting commands, servlet-container policy closure on logout, and outgoing broadcasts incorrectly counting as host presence. The final suite includes those regressions. Only generated test audio was added by the tests; two generated uploads left by an earlier failing run were explicitly cleaned up. User uploads were retained.
+
+Rooms use ephemeral single-backend memory and end on restart. Local synchronization is best effort, not sample-accurate; these tests do not establish WAN latency or physical-device behavior. See [listening rooms](listening-rooms.md) for protocol, limits and deployment boundaries.
+
 ## Milestone 3 — 2026-09-10
 
 - **Builds:** Docker Compose rebuild/start succeeded; frontend TypeScript/Vite build passed. Host `mvnw.cmd -B -ntp verify` passed 7 tests: catalog/security contracts and audio stream/duration validation.

@@ -6,6 +6,7 @@ export type Track = {
   durationSeconds: number;
   audioUrl: string;
   artwork: string;
+  publicCredits?: string;
 };
 
 export function formatTime(seconds: number) {

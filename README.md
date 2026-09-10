@@ -2,7 +2,7 @@
 
 A little space to get lost in sound. A music web application for a Computer Engineering portfolio.
 
-**Milestones 1–3:** backend-driven catalog and search, original synthetic demo audio, a persistent player, accounts, favorites, private playlists and authorized audio uploads. A durable processing queue validates audio with FFmpeg, publishes MP3 files, and handles retry/removal. Synchronized rooms are the next milestone.
+**Milestones 1–4:** backend-driven catalog/search, a persistent player, accounts, favorites, private playlists, authorized audio uploads and synchronized listening rooms. A durable queue validates/converts uploads with FFmpeg. Rooms provide host controls, a shared queue, votes and reconnect recovery. Public credits are visible from each track's information button.
 
 ## Run locally
 
@@ -19,6 +19,10 @@ Open **http://localhost:3000**. Click **Start listening**, navigate to **About U
 To try the personal library, select **Sign in → Create account**, choose a display name, email and password (10–64 characters), then create a playlist in **Your library**. In **Discover**, use the heart to save a favorite and the list-plus button to add a track to a playlist. Open the playlist to rename it, edit its description, reorder/remove tracks or delete it. Use **Your account → Sign out** to end the session. Registration does not send email; verification and password recovery are not implemented yet.
 
 To publish audio, sign in and select **Upload audio**. Choose an audio-only WAV, MP3, FLAC or OGG file (up to 25 MiB, 1 second–10 minutes), enter its metadata and source/permission, and confirm your distribution rights. Follow its status under **Your uploads**, then select **Find in Discover** to play it. Failed jobs can be retried; removing an upload also removes its track from favorites/playlists. Only processed audio is public; originals are private. See [ingestion](docs/ingestion.md) for limits and lifecycle details.
+
+Use **Public credits** for attribution that listeners must see (creator, source URL, exact license/link and required notices). The permission note remains private. Existing upload owners can open **Edit public credits** under their upload; no private note is published automatically. The information icon shows credits in Discover, favorites, the player and rooms.
+
+To listen together, open **Listening rooms → Create room**, queue songs and copy the invitation. Open it in an incognito window on the **same computer**, sign in with another account and select **Join room**. The host selects **Play room**, and each listener selects **Enable room audio**. Members add tracks and vote; only the host can pause/seek/skip. Rooms continue across navigation and reconnect after temporary connection loss. They end when the host leaves or the backend restarts. A localhost link is not accessible from a friend's computer without a separate deployment. See [listening rooms](docs/listening-rooms.md).
 
 Existing installations upgrade with the same startup command. Flyway adds the account/library/ingestion tables without deleting existing catalog data or audio. Sessions expire after 30 minutes idle or when the backend restarts; sign in again to restore access to persisted favorites/playlists.
 
@@ -85,11 +89,13 @@ The library and ingestion suites register unique `unison-e2e-…@example.test` a
 
 Optional queue recovery check, from the repository root with Node 22.12+ and Docker on PATH: `node scripts/verify-ingestion-recovery.mjs`. It simulates expired processing leases only on a disposable job it creates, verifies recovery and the retry limit, then removes the job. Set `DOCKER_BIN` to the Docker executable path if necessary.
 
+Room tests use independent browser sessions, real WebSockets and generated demo audio, with a deliberate guest clock offset. They cover host controls, votes, conflicting commands, reconnect/reload, origins, logout and the real 30-second host-away timeout. The full suite has 30 tests across desktop/mobile profiles; room state is temporary and backend tests verify its concurrency/lifecycle rules.
+
 ## Structure
 
 ```text
 frontend/   React, TypeScript, Vite, Playwright
-backend/    Java 21, Spring Boot; catalog, identity, library, ingestion and shared modules
+backend/    Java 21, Spring Boot; catalog, identity, library, ingestion, rooms and shared modules
 infra/      Nginx gateway and FFmpeg/audio seed container
 docs/       Project plan, audio provenance, architecture and verification notes
 scripts/    Original demo-audio generator and local smoke check
@@ -107,6 +113,7 @@ Account/session behavior and the personal library API are documented in [persona
 - **Catalog fails:** inspect `docker compose logs backend db`; the backend waits for PostgreSQL and validates the Flyway schema.
 - **Audio fails:** inspect `docker compose logs audio-seed storage`. Rerun `docker compose run --rm audio-seed` to restore storage contents from the built seed image; it is safe to repeat.
 - **Upload fails:** check the source format/duration and `docker compose logs backend storage`; restart the stack with `--build` to create the private originals bucket. Storage/processing failures can be retried from Your uploads. Interrupted processing is reclaimed after a 10-minute lease; deletion cleanup is retried automatically.
+- **Room audio is silent:** select Enable room audio after the host starts a track. Check connection status and volume. Host loss of contact pauses the room after 30 seconds; the host resumes it after reconnect. Recreate the room after a backend restart. For a custom development origin, set `ROOM_ALLOWED_ORIGINS` to the exact comma-separated browser origins before starting Compose.
 - **Database credentials changed:** PostgreSQL initialization variables only apply to a new volume. Use the original credentials or deliberately reset the demo volumes.
 
 ## License

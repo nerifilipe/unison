@@ -5,9 +5,11 @@ import App from "./App";
 import { PlayerProvider } from "./Player";
 import { AuthProvider } from "./Auth";
 import { LibraryProvider } from "./LibraryContext";
+import { RoomsProvider } from "./RoomsContext";
 import "./styles.css";
 import "./library.css";
 import "./uploads.css";
+import "./rooms.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -15,7 +17,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <PlayerProvider>
           <LibraryProvider>
-            <App />
+            <RoomsProvider>
+              <App />
+            </RoomsProvider>
           </LibraryProvider>
         </PlayerProvider>
       </AuthProvider>

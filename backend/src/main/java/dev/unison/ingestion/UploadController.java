@@ -46,6 +46,11 @@ class UploadController {
 
     @PostMapping("/{id}/retry") @ResponseStatus(HttpStatus.NO_CONTENT)
     void retry(Principal principal, @PathVariable UUID id) { jobs.retry(owner(principal), id); }
+    record Credits(@jakarta.validation.constraints.Size(max=1000) String publicCredits) {
+        Credits { publicCredits = publicCredits == null ? "" : publicCredits.strip(); }
+    }
+    @PutMapping("/{id}/credits") @ResponseStatus(HttpStatus.NO_CONTENT)
+    void credits(Principal principal, @PathVariable UUID id, @Valid @RequestBody Credits input) { jobs.credits(owner(principal), id, input.publicCredits()); }
     @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
     void remove(Principal principal, @PathVariable UUID id) { jobs.remove(owner(principal), id); }
 }

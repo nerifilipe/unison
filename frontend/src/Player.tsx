@@ -1,5 +1,7 @@
 import {
   createContext,
+  useCallback,
+  useEffect,
   useContext,
   useRef,
   useState,
@@ -7,11 +9,24 @@ import {
 } from "react";
 import { Music2, Pause, Play, RotateCcw, Volume2 } from "lucide-react";
 import { formatTime, type Track } from "./types";
+import { Link } from "react-router-dom";
+import { TrackCredits } from "./TrackCredits";
+
+export type RoomPlayback = {
+  id: string;
+  name: string;
+  track: Track | null;
+  playing: boolean;
+  position: number;
+  received: number;
+};
 
 type PlayerState = {
   track: Track | null;
   playing: boolean;
   select: (track: Track) => void;
+  syncRoom: (state: RoomPlayback | null) => void;
+  roomMode: boolean;
 };
 const PlayerContext = createContext<PlayerState | null>(null);
 export function usePlayer() {
@@ -30,6 +45,96 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const requestId = useRef(0);
+  const remote = useRef<RoomPlayback | null>(null);
+  const remoteEnabled = useRef(false);
+  const [room, setRoom] = useState<RoomPlayback | null>(null);
+  const [roomReady, setRoomReady] = useState(false);
+  const remoteTrack = useRef<string | null>(null);
+  const remoteStarting = useRef(false);
+  const applyRemote = useCallback(() => {
+    const state = remote.current,
+      element = audio.current;
+    if (!state || !element || !state.track) return;
+    const desired = Math.min(
+      state.track.durationSeconds,
+      state.position +
+        (state.playing ? Math.max(0, Date.now() - state.received) / 1000 : 0),
+    );
+    if (
+      element.readyState >= 1 &&
+      Math.abs(element.currentTime - desired) > 0.6
+    )
+      element.currentTime = desired;
+    if (!state.playing || !remoteEnabled.current) {
+      element.pause();
+      return;
+    }
+    if (element.paused && !remoteStarting.current) {
+      remoteStarting.current = true;
+      const request = requestId.current;
+      void element
+        .play()
+        .catch(() => {
+          if (request !== requestId.current) return;
+          remoteEnabled.current = false;
+          setRoomReady(false);
+          setError(
+            "Your browser needs permission to play. Select Enable room audio.",
+          );
+        })
+        .finally(() => {
+          remoteStarting.current = false;
+        });
+    }
+  }, []);
+  const syncRoom = useCallback(
+    (state: RoomPlayback | null) => {
+      const previous = remote.current;
+      if (!state) {
+        if (previous) {
+          requestId.current++;
+          audio.current?.pause();
+          setLoading(false);
+          setError("");
+        }
+        remote.current = null;
+        remoteTrack.current = null;
+        remoteEnabled.current = false;
+        setRoomReady(false);
+        setRoom(null);
+        return;
+      }
+      if (!previous || previous.id !== state.id) {
+        remoteEnabled.current = false;
+        setRoomReady(false);
+        audio.current?.pause();
+      }
+      remote.current = state;
+      setRoom(state);
+      if (remoteTrack.current !== state.track?.id) {
+        requestId.current++;
+        remoteTrack.current = state.track?.id ?? null;
+        setTrack(state.track);
+        setTime(0);
+        setDuration(0);
+        setError("");
+        if (audio.current) {
+          audio.current.pause();
+          if (state.track) audio.current.src = state.track.audioUrl;
+          else {
+            audio.current.removeAttribute("src");
+            audio.current.load();
+          }
+        }
+      }
+      applyRemote();
+    },
+    [applyRemote],
+  );
+  useEffect(() => {
+    const timer = setInterval(applyRemote, 400);
+    return () => clearInterval(timer);
+  }, [applyRemote]);
 
   async function play() {
     const element = audio.current;
@@ -66,6 +171,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   function select(next: Track) {
+    if (remote.current) {
+      setError(
+        "Leave the listening room to play independently. Add songs from the room queue.",
+      );
+      return;
+    }
     if (!audio.current) return;
     if (track?.id === next.id) {
       toggle();
@@ -81,7 +192,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <PlayerContext.Provider value={{ track, playing, select }}>
+    <PlayerContext.Provider
+      value={{ track, playing, select, syncRoom, roomMode: !!room }}
+    >
       {children}
       <footer className="player" aria-label="Music player">
         <audio
@@ -94,7 +207,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             setLoading(false);
           }}
           onTimeUpdate={() => setTime(audio.current?.currentTime ?? 0)}
-          onLoadedMetadata={() => setDuration(audio.current?.duration ?? 0)}
+          onLoadedMetadata={() => {
+            setDuration(audio.current?.duration ?? 0);
+            applyRemote();
+          }}
           onWaiting={() => setLoading(true)}
           onPlaying={() => setLoading(false)}
           onCanPlay={() => setLoading(false)}
@@ -114,14 +230,20 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           <div>
             <strong>{track?.title ?? "Your next favorite awaits"}</strong>
             <span>{track?.artist ?? "Pick a track to start listening"}</span>
+            {room && (
+              <Link className="room-player-link" to={`/rooms/${room.id}`}>
+                In room: {room.name}
+              </Link>
+            )}
           </div>
+          {track && <TrackCredits track={track} />}
         </div>
         <div className="transport">
           <div className="transport-buttons">
             <button
               className="icon-button restart"
               aria-label="Restart track"
-              disabled={!track}
+              disabled={!track || !!room}
               onClick={() => {
                 if (audio.current) audio.current.currentTime = 0;
               }}
@@ -131,7 +253,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             <button
               className="play-control"
               aria-label={playing ? "Pause" : "Play"}
-              disabled={!track}
+              disabled={!track || !!room}
               onClick={toggle}
             >
               {playing ? (
@@ -159,7 +281,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
               max={duration || track?.durationSeconds || 60}
               step="0.1"
               value={time}
-              disabled={!duration}
+              disabled={!duration || !!room}
               onChange={(event) => {
                 const next = Number(event.target.value);
                 if (audio.current) audio.current.currentTime = next;
@@ -185,13 +307,45 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             }}
           />
         </label>
+        {room && !roomReady && (
+          <button
+            className="room-audio-enable"
+            disabled={!room.track}
+            onClick={() => {
+              remoteEnabled.current = true;
+              setRoomReady(true);
+              setError("");
+              if (audio.current && !remote.current?.playing) {
+                void audio.current
+                  .play()
+                  .then(() => {
+                    if (!remote.current?.playing) audio.current?.pause();
+                  })
+                  .catch(() => {
+                    remoteEnabled.current = false;
+                    setRoomReady(false);
+                  });
+              } else applyRemote();
+            }}
+          >
+            Enable room audio
+          </button>
+        )}
         {error && (
           <div className="player-error" role="alert">
             {error}{" "}
             <button
               onClick={() => {
-                audio.current?.load();
-                void play();
+                if (remote.current) {
+                  setError("");
+                  remoteEnabled.current = true;
+                  setRoomReady(true);
+                  audio.current?.load();
+                  applyRemote();
+                } else {
+                  audio.current?.load();
+                  void play();
+                }
               }}
             >
               Retry audio

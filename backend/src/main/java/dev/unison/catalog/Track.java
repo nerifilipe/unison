@@ -15,11 +15,12 @@ class Track {
     private String audioKey;
     private String artwork;
     private int position;
+    private String publicCredits;
 
     protected Track() {}
 
     TrackDto toDto() {
         return new TrackDto(id, title, artist, genre, durationSeconds,
-                "/media/demo/" + audioKey, artwork);
+                "/media/demo/" + audioKey, artwork, publicCredits);
     }
 }

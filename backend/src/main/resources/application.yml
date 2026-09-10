@@ -8,6 +8,10 @@ server:
         same-site: lax
         secure: ${SESSION_COOKIE_SECURE:false}
 spring:
+  task:
+    scheduling:
+      pool:
+        size: 4
   servlet:
     multipart:
       max-file-size: 25MB
@@ -29,6 +33,8 @@ management:
     health:
       show-details: never
 unison:
+  rooms:
+    allowed-origins: ${ROOM_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173}
   storage:
     endpoint: ${S3_ENDPOINT:http://localhost:9000}
     access-key: ${S3_ACCESS_KEY:unison-local}

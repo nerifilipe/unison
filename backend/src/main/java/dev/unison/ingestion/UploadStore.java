@@ -22,17 +22,17 @@ class UploadStore {
     static UploadJob row(ResultSet rs, int index) throws SQLException {
         return new UploadJob(rs.getObject("id", UUID.class), rs.getString("title"), rs.getString("artist"),
                 rs.getString("genre"), rs.getString("rights_note"), rs.getString("file_name"), rs.getLong("file_size"),
-                rs.getString("status"), rs.getString("error"), rs.getTimestamp("created_at").toInstant(), rs.getInt("attempts"));
+                rs.getString("status"), rs.getString("error"), rs.getTimestamp("created_at").toInstant(), rs.getInt("attempts"), rs.getString("public_credits"));
     }
 
     UploadJob create(UUID owner, UploadInput input, String fileName, long size) {
         admit(owner);
         UUID id = UUID.randomUUID();
         jdbc.sql("""
-                INSERT INTO uploads(id,account_id,title,artist,genre,rights_note,file_name,file_size,status)
-                VALUES (:id,:owner,:title,:artist,:genre,:rights,:name,:size,'RECEIVING')
+                INSERT INTO uploads(id,account_id,title,artist,genre,rights_note,file_name,file_size,status,public_credits)
+                VALUES (:id,:owner,:title,:artist,:genre,:rights,:name,:size,'RECEIVING',:credits)
                 """).param("id", id).param("owner", owner).param("title", input.title()).param("artist", input.artist())
-                .param("genre", input.genre()).param("rights", input.rightsNote()).param("name", fileName).param("size", size).update();
+                .param("genre", input.genre()).param("rights", input.rightsNote()).param("name", fileName).param("size", size).param("credits", input.publicCredits()).update();
         return owned(owner, id, false);
     }
 
@@ -96,7 +96,15 @@ class UploadStore {
         int changed = jdbc.sql("UPDATE uploads SET status='READY',error=NULL,updated_at=now() WHERE id=:id AND status='PROCESSING' AND attempts=:attempts")
                 .param("id", job.id()).param("attempts", job.attempts()).update();
         if (changed != 1) throw new IllegalStateException("Upload claim expired");
-        catalog.publish(job.id().toString(), job.title(), job.artist(), job.genre(), duration, AudioStorage.outputKey(job.id()));
+        String credits = jdbc.sql("SELECT public_credits FROM uploads WHERE id=:id").param("id", job.id()).query(String.class).single();
+        catalog.publish(job.id().toString(), job.title(), job.artist(), job.genre(), duration, AudioStorage.outputKey(job.id()), credits);
+    }
+
+    void credits(UUID owner, UUID id, String value) {
+        UploadJob job = owned(owner, id, true);
+        if (job.status().equals("DELETING")) throw new ResponseStatusException(HttpStatus.CONFLICT, "Upload is being removed.");
+        jdbc.sql("UPDATE uploads SET public_credits=:credits WHERE id=:id").param("credits", value).param("id", id).update();
+        catalog.credits(id.toString(), value);
     }
 
     void failed(UploadJob job, String error) {

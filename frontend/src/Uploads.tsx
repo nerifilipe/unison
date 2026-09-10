@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { Check, FileAudio, RefreshCw, Trash2, Upload } from "lucide-react";
-import { api, message } from "./api";
+import { api, json, message } from "./api";
 import { useLibrary } from "./LibraryContext";
 
 type Job = {
@@ -14,6 +14,7 @@ type Job = {
   status: string;
   error: string | null;
   createdAt: string;
+  publicCredits: string;
 };
 const pending = (job: Job) =>
   ["RECEIVING", "QUEUED", "PROCESSING", "DELETING"].includes(job.status);
@@ -132,6 +133,13 @@ export function UploadsPage() {
                 </div>
                 <div className="upload-job-body">
                   <h3>{job.title}</h3>
+                  <CreditsEditor
+                    job={job}
+                    saved={() => {
+                      reload();
+                      setRevision((value) => value + 1);
+                    }}
+                  />
                   <p>
                     {job.artist} · {job.fileName} ·{" "}
                     {(job.fileSize / 1048576).toFixed(1)} MiB
@@ -212,6 +220,7 @@ function UploadForm({ submitted }: { submitted: () => void }) {
   const [genre, setGenre] = useState("Ambient");
   const [rights, setRights] = useState(false);
   const [note, setNote] = useState("");
+  const [credits, setCredits] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -240,6 +249,7 @@ function UploadForm({ submitted }: { submitted: () => void }) {
             genre,
             rightsConfirmed: rights,
             rightsNote: note,
+            publicCredits: credits,
           }),
         ],
         { type: "application/json" },
@@ -258,6 +268,7 @@ function UploadForm({ submitted }: { submitted: () => void }) {
       setTitle("");
       setRights(false);
       setNote("");
+      setCredits("");
       if (fileInput.current) fileInput.current.value = "";
       submitted();
     } catch (failure) {
@@ -334,6 +345,21 @@ function UploadForm({ submitted }: { submitted: () => void }) {
           onChange={(e) => setNote(e.target.value)}
         />
       </label>
+      <label>
+        Public credits (optional)
+        <textarea
+          maxLength={1000}
+          rows={3}
+          value={credits}
+          disabled={busy}
+          onChange={(event) => setCredits(event.target.value)}
+          placeholder="Shown to everyone: creator, source URL, license name and URL, and any changes. Include all credits required by the license."
+        />
+      </label>
+      <p className="form-note">
+        Your permission note above stays private. Public credits appear with the
+        track.
+      </p>
       <label className="rights-checkbox">
         <input
           type="checkbox"
@@ -368,5 +394,62 @@ function UploadForm({ submitted }: { submitted: () => void }) {
         {busy ? "Uploading audio…" : "Upload and process"}
       </button>
     </form>
+  );
+}
+
+function CreditsEditor({ job, saved }: { job: Job; saved: () => void }) {
+  const [value, setValue] = useState(job.publicCredits ?? "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  return (
+    <details className="credits-editor">
+      <summary>Edit public credits</summary>
+      <form
+        className="form-stack"
+        onSubmit={async (event) => {
+          event.preventDefault();
+          setBusy(true);
+          setError("");
+          setSuccess(false);
+          try {
+            await api(
+              `/api/uploads/${job.id}/credits`,
+              json("PUT", { publicCredits: value }),
+            );
+            setSuccess(true);
+            saved();
+          } catch (failure) {
+            setError(message(failure));
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        <label>
+          Public credits for {job.title}
+          <textarea
+            aria-label={`Public credits for ${job.title}`}
+            maxLength={1000}
+            rows={4}
+            value={value}
+            disabled={busy}
+            onChange={(event) => setValue(event.target.value)}
+          />
+        </label>
+        <p className="form-note">
+          Visible to everyone. Include the creator, source, license and any
+          required notices.
+        </p>
+        <button
+          className="secondary-button"
+          disabled={busy || job.status === "DELETING"}
+        >
+          Save credits
+        </button>
+        {error && <p role="alert">{error}</p>}
+        {success && <p role="status">Public credits saved.</p>}
+      </form>
+    </details>
   );
 }

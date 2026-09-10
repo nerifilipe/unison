@@ -44,7 +44,9 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     if (
       error instanceof ApiError &&
       error.status === 401 &&
-      (path.startsWith("/api/library") || path.startsWith("/api/uploads"))
+      (path.startsWith("/api/library") ||
+        path.startsWith("/api/uploads") ||
+        path.startsWith("/api/rooms"))
     ) {
       window.dispatchEvent(new Event("unison-session-expired"));
     }
