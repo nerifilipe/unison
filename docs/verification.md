@@ -97,4 +97,10 @@ Added eight desktop/mobile checks to the existing suite (38 total): axe scans, k
 
 ## Repeat
 
+### Local installation helpers — 2026-09-10
+
+Ran the documented Windows PowerShell 5.1 startup command successfully against the existing local stack: cached image builds, Compose readiness and all three audio range checks passed. The smoke check also passed under PowerShell 7. Validated shell syntax and ran `smoke.sh` inside a Linux container against the real gateway; all three generated tracks returned HTTP 206. The Windows helper resolves Docker Desktop's per-user executable and selects one executable if multiple Docker commands are found. The range check uses `AddRange` for compatibility with Windows PowerShell 5.1. `git diff --check` passed.
+
+This change adds documentation and operational scripts only. A fresh installation on another physical computer and the complete macOS/Linux startup wrapper were not exercised in this pass. Existing accounts and uploads were preserved; no volumes were deleted. The prior application/browser validation above remains unchanged.
+
 Run the commands in the root README. Screenshots and HTML reports are generated under `frontend/test-results/` and `frontend/playwright-report/` (ignored by Git). `scripts/smoke.ps1` provides the quick API/media check.

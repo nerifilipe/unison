@@ -6,6 +6,31 @@ A little space to get lost in sound. A music web application for a Computer Engi
 
 ## Run locally
 
+**No cloud accounts or paid hosting required.** Each person can run an independent copy. See the [step-by-step installation guide](docs/local-setup.md) for Windows, macOS and Linux.
+
+After installing Git and Docker:
+
+```sh
+git clone https://github.com/nerifilipe/unison.git
+cd unison
+```
+
+Windows PowerShell:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\local.ps1 start
+```
+
+macOS / Linux:
+
+```sh
+sh scripts/local.sh start
+```
+
+The scripts build, wait for readiness and verify catalog/audio delivery. Replace `start` with `stop`, `status`, `logs` or `verify` for everyday use. Stopping preserves data. A fresh installation contains the three generated tracks, without anyone else's accounts or uploads.
+
+### Direct Docker commands
+
 Prerequisites: Git and Docker Desktop running Linux containers (WSL 2 on Windows), or Docker Engine with Compose on Linux. The first build needs internet access and several minutes to download dependencies. Java, Node, Maven, PostgreSQL and FFmpeg do **not** need host installations for this path.
 
 From the repository root:
@@ -104,7 +129,7 @@ frontend/   React, TypeScript, Vite, Playwright
 backend/    Java 21, Spring Boot; catalog, identity, library, ingestion, rooms and shared modules
 infra/      Nginx gateway and FFmpeg/audio seed container
 docs/       Project plan, audio provenance, architecture and verification notes
-scripts/    Original demo-audio generator and local smoke check
+scripts/    Local startup/stop helpers, audio generation and smoke checks
 ```
 
 See [project plan](docs/project-plan.md), [architecture](docs/architecture.md), [audio provenance](docs/audio-provenance.md) and [verification](docs/verification.md).

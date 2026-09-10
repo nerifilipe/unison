@@ -1,5 +1,9 @@
 # Unison project plan
 
+## Local distribution — 2026-09-10
+
+Publish the repository with reproducible local installation instead of paid/cloud hosting. Provide Windows PowerShell and macOS/Linux shell helpers for startup, shutdown, status, logs and HTTP/audio verification. Keep Docker as the only application runtime prerequisite, preserve local volumes, and document independent installations and generated sample audio. See `local-setup.md`.
+
 ## Repository inspection — 2026-09-09
 
 The repository initially contains a short README, MIT license, Java-oriented gitignore, and untracked local tool archives. There is no existing application, test suite, hosting configuration, or architecture graph to preserve. Local tool archives are not project dependencies.
