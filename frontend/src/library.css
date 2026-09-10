@@ -3,10 +3,10 @@
 }
 .account-menu {
   border-top: 1px solid var(--line);
-  margin: 25px 10px 0;
-  padding-top: 19px;
+  margin: 12px 16px 0;
+  padding-top: 20px;
   font-size: 12px;
-  color: #c9d8b7;
+  color: #c4c8d1;
 }
 .account-menu a {
   display: flex;
@@ -19,8 +19,8 @@
 }
 .account-menu small {
   display: block;
-  font-size: 9px;
-  color: #9aaa8e;
+  font-size: 11px;
+  color: #a8adb9;
   margin-top: 5px;
 }
 .account-menu > button {
@@ -31,19 +31,20 @@
 }
 .page-description {
   margin: 17px 0 28px;
-  color: #a3b096;
+  color: #a8adb9;
   font-size: 14px;
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
 .account-page {
-  padding-top: 55px;
+  padding-top: 48px;
+  max-width: 650px;
 }
 .account-card {
-  max-width: 470px;
-  border: 1px solid #3d4833;
-  border-radius: 10px;
-  background: #20261b;
+  max-width: 540px;
+  border: 1px solid #23262e;
+  border-radius: 14px;
+  background: #191c22;
   padding: 30px;
   margin: 30px 0;
 }
@@ -53,7 +54,7 @@
 }
 .account-card > p {
   font-size: 13px;
-  color: #a7b79a;
+  color: #a8adb9;
   line-height: 1.8;
   margin-bottom: 18px;
 }
@@ -66,28 +67,28 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  font-size: 12px;
-  color: #c5d3b7;
+  font-size: 13px;
+  color: #c4c8d1;
 }
 .form-stack input,
 .form-stack textarea {
-  border: 1px solid #49573c;
-  background: #171c13;
-  border-radius: 5px;
-  color: #eef5e6;
+  border: 1px solid #363b46;
+  background: #13151a;
+  border-radius: 8px;
+  color: #f2f3f7;
   padding: 12px 13px;
   font: inherit;
   width: 100%;
   resize: vertical;
 }
 .form-stack label small {
-  font-size: 10px;
-  color: #95a785;
+  font-size: 12px;
+  color: #a8adb9;
 }
 .auth-tabs {
   display: flex;
   gap: 6px;
-  background: #171c13;
+  background: #13151a;
   padding: 4px;
   border-radius: 6px;
   margin-bottom: 5px;
@@ -96,13 +97,13 @@
   flex: 1;
   padding: 11px;
   background: transparent;
-  color: #9eae8e;
+  color: #a8adb9;
   border-radius: 4px;
   font-size: 12px;
 }
 .auth-tabs button[aria-pressed="true"] {
-  background: #34442a;
-  color: #dcf3c1;
+  background: #23262e;
+  color: #f2f3f7;
 }
 .form-error {
   color: #ffb6a4 !important;
@@ -116,9 +117,9 @@
   overflow-wrap: anywhere;
 }
 .form-note {
-  font-size: 10px !important;
+  font-size: 12px !important;
   line-height: 1.7;
-  color: #94a285 !important;
+  color: #a8adb9 !important;
   margin: 0 !important;
 }
 .text-link {
@@ -146,7 +147,7 @@
   margin-top: 17px;
 }
 .signed-out p {
-  color: #a1ae94;
+  color: #a8adb9;
   line-height: 1.8;
   margin: 24px 0;
   max-width: 470px;
@@ -179,7 +180,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #b1c29e;
+  color: #a8adb9;
   font-size: 10px;
   padding: 5px;
 }
@@ -196,11 +197,11 @@
   font-size: 11px;
 }
 .playlist-dialog {
-  background: #222a1c;
-  border: 1px solid #586847;
-  color: #eff7e6;
-  border-radius: 10px;
-  padding: 25px;
+  background: #191c22;
+  border: 1px solid #363b46;
+  color: #f2f3f7;
+  border-radius: 16px;
+  padding: 28px;
   width: min(440px, calc(100% - 36px));
   max-height: 80vh;
   box-shadow: 0 20px 70px #0009;
@@ -220,7 +221,7 @@
 }
 .playlist-dialog > p {
   font-size: 13px;
-  color: #a2b292;
+  color: #a8adb9;
   margin: 17px 0;
   line-height: 1.7;
 }
@@ -234,8 +235,8 @@
 .playlist-options button {
   display: block;
   text-align: left;
-  background: #303d25;
-  border: 1px solid #455539;
+  background: #23262e;
+  border: 1px solid #363b46;
   border-radius: 5px;
   padding: 15px;
   font-size: 14px;
@@ -244,11 +245,11 @@
 .playlist-options small {
   display: block;
   font-size: 10px;
-  color: #a0b08f;
+  color: #a8adb9;
   margin-top: 7px;
 }
 .playlist-options button:hover {
-  background: #3e5030;
+  background: #23262e;
 }
 .library-page > .page-heading {
   gap: 20px;
@@ -260,11 +261,11 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  background: linear-gradient(110deg, #3c4430, #252f20);
-  border: 1px solid #47573b;
+  background: linear-gradient(110deg, #30263f, #211e2b);
+  border: 1px solid #363b46;
   border-radius: 8px;
   padding: 25px 28px;
-  color: #d4ecb9;
+  color: #c4c8d1;
   margin: 25px 0 30px;
 }
 .favorites-banner h2 {
@@ -273,7 +274,7 @@
 }
 .favorites-banner p {
   font-size: 12px;
-  color: #a3b490;
+  color: #a8adb9;
 }
 .favorites-banner > svg:last-child {
   margin-left: auto;
@@ -288,13 +289,13 @@
 }
 .playlist-cover {
   aspect-ratio: 1.5;
-  border: 1px solid #4c603b;
+  border: 1px solid #363b46;
   border-radius: 7px;
   background:
-    radial-gradient(ellipse at 90% 10%, #6d8150, transparent 65%),
+    radial-gradient(ellipse at 90% 10%, #8d929e, transparent 65%),
     repeating-linear-gradient(135deg, #ffffff06 0 1px, transparent 1px 8px),
-    #2f3d24;
-  color: #c8dfa9;
+    #23262e;
+  color: #c4b5fd;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -312,7 +313,7 @@
 }
 .playlist-card p {
   font-size: 11px;
-  color: #9eae8e;
+  color: #a8adb9;
   line-height: 1.7;
 }
 .playlist-description {
@@ -321,8 +322,8 @@
 }
 .playlist-form {
   max-width: 600px;
-  background: #242d1d;
-  border: 1px solid #495b39;
+  background: #191c22;
+  border: 1px solid #363b46;
   padding: 25px;
   border-radius: 8px;
   margin: 25px 0;
@@ -381,12 +382,12 @@
 }
 .row-title p {
   font-size: 11px;
-  color: #9ba88d;
+  color: #a8adb9;
   margin-top: 7px;
 }
 .row-duration {
   font-size: 11px;
-  color: #96a387;
+  color: #a8adb9;
   margin: 0 10px;
 }
 .row-order {
@@ -416,7 +417,7 @@
 }
 .delete-confirm p {
   font-size: 12px;
-  color: #c9b6a2;
+  color: #c4b5fd;
   line-height: 1.8;
   margin: 13px 0 20px;
 }
@@ -428,7 +429,7 @@
   font-size: 12px;
 }
 .playlist-grid a:hover .playlist-cover {
-  border-color: #a9c285;
+  border-color: #c4b5fd;
 }
 .library-page .message-state {
   margin-top: 22px;
@@ -440,30 +441,18 @@
   .playlist-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .sidebar-bottom {
-    padding-top: 30px;
-  }
-  .sidebar-bottom h3 {
-    font-size: 15px;
-  }
-  .sidebar-bottom p {
-    font-size: 11px;
-  }
-  .build-label {
-    font-size: 7px;
-  }
 }
 @media (max-width: 760px) {
   .sidebar {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 18px;
+    gap: 14px;
   }
   .sidebar nav {
     grid-column: 1/-1;
     grid-row: 2;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     width: 100%;
     gap: 4px;
   }
@@ -472,24 +461,38 @@
     gap: 7px;
     padding: 10px 2px;
     font-size: 10px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .sidebar-footer {
+    display: contents;
+  }
+  .sidebar-footer .about-link {
+    grid-column: 1/-1;
+    grid-row: 3;
+    justify-content: center;
+    padding: 0;
+    font-size: 11px;
   }
   .account-menu {
+    grid-row: 1;
+    grid-column: 2;
     border: 0;
     margin: 0;
     padding: 0;
     font-size: 11px;
-    max-width: 155px;
+    max-width: 145px;
   }
   .account-menu small {
-    font-size: 8px;
+    display: none;
   }
   .account-menu a {
     gap: 8px;
   }
   .track-extras {
-    grid-column: 2;
-    margin-top: 0;
-    align-self: start;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    gap: 2px;
   }
   .track-actions .icon-button {
     min-width: 36px;
@@ -581,7 +584,7 @@
     gap: 10px;
   }
   .track-card {
-    row-gap: 0;
+    display: block;
   }
   .playlist-card h3 {
     font-size: 14px;

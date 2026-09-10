@@ -111,7 +111,7 @@ test("upload UI publishes generated audio, streams it, and removes its catalog a
   await register(page.request);
   const title = `Generated ${randomUUID()}`;
   await page.goto("/uploads");
-  await expect(page.getByText("Your first release starts here.")).toBeVisible();
+  await expect(page.getByText("No uploads yet.")).toBeVisible();
   await page.getByLabel("Audio file", { exact: true }).setInputFiles({
     name: "generated.wav",
     mimeType: "audio/wav",
@@ -224,7 +224,7 @@ test("upload UI publishes generated audio, streams it, and removes its catalog a
   await page
     .getByRole("button", { name: "Remove permanently", exact: true })
     .click();
-  await expect(page.getByText("Your first release starts here.")).toBeVisible({
+  await expect(page.getByText("No uploads yet.")).toBeVisible({
     timeout: 30000,
   });
   expect(

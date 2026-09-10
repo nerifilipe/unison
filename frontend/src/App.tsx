@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink, Route, Routes, useSearchParams } from "react-router-dom";
 import {
-  ArrowDown,
   ArrowUpRight,
   AudioLines,
-  Check,
   ChevronRight,
   Disc3,
   Headphones,
@@ -14,7 +12,6 @@ import {
   Play,
   Radio,
   Search,
-  Waves,
   Heart,
   Library,
   Upload,
@@ -69,86 +66,90 @@ function Discover() {
     };
   }, [attempt, query]);
   const visible = tracks;
+  const featured = tracks.at(-1);
   return (
     <>
-      <header className="topbar">
+      <header className="topbar discover-topbar">
         <div className="breadcrumb">
-          Explore <ChevronRight size={14} />
           <span>Discover</span>
         </div>
-        <span className="demo-tag">
-          <span /> LOCAL DEMO
-        </span>
+        <label className="search">
+          <Search size={18} />
+          <input
+            type="search"
+            maxLength={120}
+            aria-label="Search catalog"
+            placeholder="Search songs, artists or genres"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
       </header>
       <div className="page-content">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">A LITTLE LESS NOISE. A LITTLE MORE MUSIC.</p>
-            <h1>Find your frequency.</h1>
+            <p className="eyebrow">YOUR DAILY SOUNDTRACK</p>
+            <h1>Music, at your pace.</h1>
           </div>
-          <span className="edition">
-            THE UNISON SESSIONS <span>VOL. 001 — 2026</span>
-          </span>
+          <NavLink className="subtle-link" to="/library">
+            Your collection <ArrowUpRight size={16} />
+          </NavLink>
         </div>
-        <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <span className="pill">
-              <span /> THE FIRST SESSION
-            </span>
-            <h2 id="hero-title">
-              Good things
-              <br />
-              start with a listen.
-            </h2>
-            <p>
-              Step out of the everyday. Ease into a collection
-              <br className="desktop-break" /> of sounds made for a slower
-              moment.
-            </p>
-            <button
-              className="primary-button"
-              disabled={!tracks.length || status !== "ready"}
-              onClick={() => select(tracks[0])}
-            >
-              {current?.id === tracks[0]?.id && playing ? (
-                <Pause size={16} fill="currentColor" />
-              ) : (
-                <Play size={16} fill="currentColor" />
-              )}{" "}
-              {current?.id === tracks[0]?.id && playing
-                ? "Pause session"
-                : "Start listening"}
-            </button>
-            <span className="hero-caption">
-              3 ORIGINAL SOUNDS <span> / </span> NO DISTRACTIONS
-            </span>
-          </div>
-          <div className="hero-art" aria-hidden="true">
-            <div className="orbital-ring ring-one" />
-            <div className="orbital-ring ring-two" />
-            <div className="sun" />
-            <span className="art-coordinates">38°43′ N &nbsp; 9°08′ W</span>
-            <span className="art-label">
-              SOUND
-              <br />
-              WITHOUT
-              <br />
-              BOUNDARIES.
-            </span>
-            <div className="art-bottom">
-              <span>UNISON®</span>
-              <AudioLines size={30} />
+        {!query.trim() && (
+          <section className="discovery-feature" aria-label="Featured track">
+            <div className="feature-copy">
+              <span className="feature-label">
+                <AudioLines size={16} /> In the spotlight
+              </span>
+              <h2>
+                {status === "ready"
+                  ? (featured?.title ?? "Make room for music.")
+                  : "A new listening moment."}
+              </h2>
+              <p>
+                {status === "ready" && featured
+                  ? featured.artist
+                  : "Explore the catalog and find something that stays with you."}
+              </p>
+              {featured && status === "ready" && (
+                <span className="feature-meta">
+                  {featured.genre} <span>·</span>{" "}
+                  {formatTime(featured.durationSeconds)}
+                </span>
+              )}
+              <button
+                className="primary-button"
+                disabled={!featured || status !== "ready"}
+                onClick={() => featured && select(featured)}
+              >
+                {current?.id === featured?.id && playing ? (
+                  <Pause size={17} fill="currentColor" />
+                ) : (
+                  <Play size={17} fill="currentColor" />
+                )}
+                {current?.id === featured?.id && playing
+                  ? "Pause session"
+                  : "Start listening"}
+              </button>
             </div>
-          </div>
-        </section>
+            <div
+              className={`feature-record artwork ${featured?.artwork ?? "orbit"}`}
+              aria-hidden="true"
+            >
+              <div className="record-disc">
+                <span>
+                  <AudioLines size={28} />
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
         <section className="catalog" aria-labelledby="catalog-title">
           <div className="section-heading">
             <div>
-              <div className="section-kicker">
-                CURATED FOR YOUR FIRST LISTEN
-              </div>
+              <div className="section-kicker">THE CATALOG</div>
               <h2 id="catalog-title">
-                Fresh frequencies
+                {query.trim() ? "Search results" : "All tracks"}
                 <span>
                   {status === "ready"
                     ? String(tracks.length).padStart(2, "0")
@@ -156,31 +157,20 @@ function Discover() {
                 </span>
               </h2>
             </div>
-            <label className="search">
-              <Search size={17} />
-              <input
-                type="search"
-                maxLength={120}
-                aria-label="Search catalog"
-                placeholder="Find a sound…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </label>
           </div>
           {status === "loading" && (
             <div className="loading-state" role="status">
               <span className="skeleton" />
               <span className="skeleton" />
               <span className="skeleton" />
-              <p>Finding your frequencies…</p>
+              <p>Loading tracks…</p>
             </div>
           )}
           {status === "error" && (
             <div className="message-state" role="alert">
               <Radio />
               <h3>We couldn't reach the catalog.</h3>
-              <p>Check that the local services are running, then try again.</p>
+              <p>Please try again in a moment.</p>
               <button
                 className="secondary-button"
                 onClick={() => setAttempt((value) => value + 1)}
@@ -198,7 +188,7 @@ function Discover() {
               <p>
                 {query.trim()
                   ? "Try another title, artist or genre."
-                  : "Add the demo seed and come back for a listen."}
+                  : "New music will appear here when it is published."}
               </p>
               {query && (
                 <button
@@ -212,19 +202,17 @@ function Discover() {
           )}
           {status === "ready" && (
             <div className="track-grid">
-              {visible.map((track, index) => (
+              {visible.map((track) => (
                 <article className="track-card" key={track.id}>
                   <button
                     className={`artwork ${track.artwork} track-art`}
                     aria-label={`${current?.id === track.id && playing ? "Pause" : "Play"} ${track.title}`}
                     onClick={() => select(track)}
                   >
-                    <span className="cover-top">
-                      UNISON LAB <span>0{index + 1}</span>
-                    </span>
+                    <span className="cover-top">{track.artist}</span>
                     <span className="cover-title">{track.title}</span>
                     <span className="cover-bottom">
-                      ORIGINAL SESSIONS{" "}
+                      {track.genre}
                       <span className="card-play">
                         {current?.id === track.id && playing ? (
                           <Pause size={20} fill="currentColor" />
@@ -255,14 +243,16 @@ function Discover() {
             </div>
           )}
         </section>
-        <div className="bottom-note">
-          <span>
-            <Check size={15} /> Original audio. Open to explore.
+        <NavLink className="listen-together" to="/rooms">
+          <span className="together-icon">
+            <Radio size={24} />
           </span>
-          <NavLink to="/about">
-            Meet Unison <ArrowUpRight size={16} />
-          </NavLink>
-        </div>
+          <span>
+            <strong>Good music. Better together.</strong>
+            <span>Start a room, share the queue and listen in sync.</span>
+          </span>
+          <ArrowUpRight size={22} />
+        </NavLink>
       </div>
     </>
   );
@@ -274,49 +264,42 @@ function About() {
       <header className="topbar">
         <div className="breadcrumb">
           Unison <ChevronRight size={14} />
-          <span>About the project</span>
+          <span>About Unison</span>
         </div>
-        <span className="demo-tag">
-          <span /> LOCAL DEMO
-        </span>
       </header>
       <div className="page-content about-page">
-        <p className="eyebrow">BUILT WITH CURIOSITY. MADE FOR LISTENING.</p>
+        <p className="eyebrow">ABOUT UNISON</p>
         <h1>A shared love of sound.</h1>
         <p className="about-intro">
-          Unison is a music playground and a Computer Engineering portfolio
-          project. A place to explore how thoughtful interfaces and reliable
-          systems come together.
+          Discover music, build a collection that feels like you, and share the
+          listening experience with friends.
         </p>
         <div className="about-highlight">
           <Headphones size={32} />
           <div>
             <h2>Keep the music going.</h2>
             <p>
-              Your player stays with you as you move between pages. Pick a track
-              in Discover, then come back here. Same sound, uninterrupted.
+              Browse the catalog, organize a playlist or explore your library
+              while your music keeps playing.
             </p>
           </div>
         </div>
         <div className="about-grid">
           <section>
-            <span className="section-kicker">01 / THE SOUND</span>
-            <h2>Original by design</h2>
+            <span className="section-kicker">YOUR COLLECTION</span>
+            <h2>Keep what you love</h2>
             <p>
-              These three one-minute demos are synthetic ambient chords,
-              generated with FFmpeg from mathematical signals. No commercial
-              recordings, samples or third-party performances are used.
+              Save your favorites and make private playlists for every mood.
+              Upload music you have permission to share and give its creators
+              credit.
             </p>
           </section>
           <section>
-            <span className="section-kicker">02 / THE FOUNDATION</span>
-            <h2>Small beginning. Clear direction.</h2>
+            <span className="section-kicker">LISTEN TOGETHER</span>
+            <h2>A shared listening space</h2>
             <p>
-              A React interface, a modular Spring Boot API, PostgreSQL metadata
-              and S3-compatible audio storage. Save favorites and make private
-              playlists with your account, or share authorized audio from your
-              studio. Invite friends to a listening room, build a shared queue
-              and vote for what plays next.
+              Invite friends to a room and listen to the same song at the same
+              time. Add tracks to the shared queue and vote for what plays next.
             </p>
           </section>
         </div>
@@ -341,15 +324,11 @@ export default function App() {
             unison<span className="brand-dot">.</span>
           </span>
         </NavLink>
-        <p className="nav-caption">YOUR SPACE FOR SOUND</p>
+        <p className="nav-caption">BROWSE</p>
         <nav aria-label="Main navigation">
           <NavLink to="/" end>
             <Disc3 size={19} />
             Discover
-          </NavLink>
-          <NavLink to="/about">
-            <Info size={19} />
-            About Unison
           </NavLink>
           <NavLink to="/favorites">
             <Heart size={19} />
@@ -359,32 +338,21 @@ export default function App() {
             <Library size={19} />
             Your library
           </NavLink>
+          <NavLink to="/rooms">
+            <Radio size={19} />
+            Listening rooms
+          </NavLink>
+          <NavLink to="/uploads">
+            <Upload size={19} />
+            Upload audio
+          </NavLink>
         </nav>
-        <NavLink className="upload-nav" to="/uploads">
-          <Upload size={17} />
-          Upload audio
-        </NavLink>
-        <AccountMenu />
-        <NavLink className="rooms-nav" to="/rooms">
-          <Radio size={17} />
-          Listening rooms
-        </NavLink>
-        <div className="sidebar-bottom">
-          <div className="sidebar-symbol">
-            <Waves size={30} />
-          </div>
-          <h3>
-            Better with your
-            <br />
-            headphones on.
-          </h3>
-          <p>
-            A little space to get
-            <br />
-            lost in sound.
-          </p>
-          <ArrowDown size={19} />
-          <span className="build-label">LISTEN TOGETHER · MILESTONE 04</span>
+        <div className="sidebar-footer">
+          <NavLink className="about-link" to="/about">
+            <Info size={17} />
+            About Unison
+          </NavLink>
+          <AccountMenu />
         </div>
       </aside>
       <main id="main">

@@ -114,7 +114,7 @@ export function AccountGate({ children }: { children: ReactNode }) {
   if (status === "loading")
     return (
       <div className="page-content" role="status">
-        Loading your library…
+        Checking your account…
       </div>
     );
   if (status === "error")
@@ -129,9 +129,12 @@ export function AccountGate({ children }: { children: ReactNode }) {
   if (!user)
     return (
       <div className="page-content signed-out">
-        <span className="section-kicker">YOUR PERSONAL COLLECTION</span>
-        <h1>A space for your favorites.</h1>
-        <p>Sign in to save sounds and put together playlists of your own.</p>
+        <span className="section-kicker">YOUR UNISON ACCOUNT</span>
+        <h1>More music. More connection.</h1>
+        <p>
+          Sign in to save favorites, create playlists, share music and join
+          listening rooms.
+        </p>
         <Link className="primary-button" to="/account">
           <LogIn size={17} />
           Sign in to continue
@@ -180,7 +183,7 @@ export function AccountPage() {
   }
   return (
     <div className="page-content account-page">
-      <p className="eyebrow">YOUR SPACE. YOUR SOUND.</p>
+      <p className="eyebrow">YOUR ACCOUNT</p>
       {user ? (
         <>
           <h1>Welcome, {user.displayName}.</h1>
@@ -219,7 +222,7 @@ export function AccountPage() {
         </>
       ) : (
         <>
-          <h1>{register ? "Make yourself at home." : "Welcome back."}</h1>
+          <h1>{register ? "Create an account" : "Welcome back."}</h1>
           <p className="page-description">
             Save the sounds you love. Make a collection that feels like you.
           </p>
@@ -299,10 +302,11 @@ export function AccountPage() {
                   ? "Create your account"
                   : "Sign in to Unison"}
             </button>
-            <p className="form-note">
-              Local demo accounts. Email verification and password recovery are
-              not available yet.
-            </p>
+            {register && (
+              <p className="form-note">
+                Keep your password safe. Password recovery is not available.
+              </p>
+            )}
           </form>
         </>
       )}

@@ -1,33 +1,21 @@
-.upload-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 10px 0;
-  padding: 11px 6px;
-  font-size: 12px;
-  color: #b7cf9f;
-}
-.upload-nav.active {
-  color: var(--accent);
-}
 .uploads-page h1 {
   max-width: 700px;
 }
 .upload-form {
-  max-width: 850px;
+  max-width: 980px;
   padding: 28px;
-  border: 1px solid #425436;
-  background: #20271b;
-  border-radius: 9px;
+  border: 1px solid #363b46;
+  background: #191c22;
+  border-radius: 14px;
   margin-bottom: 40px;
 }
 .audio-file-label {
   align-items: center;
   text-align: center;
-  border: 1px dashed #6b8054;
-  border-radius: 7px;
-  padding: 26px;
-  background: #2c3824;
+  border: 1px dashed #8d929e;
+  border-radius: 10px;
+  padding: 32px;
+  background: #c4b5fd08;
   color: var(--accent) !important;
 }
 .audio-file-label strong {
@@ -36,7 +24,7 @@
 .audio-file-label span {
   font-size: 11px;
   line-height: 1.8;
-  color: #abc094;
+  color: #a8adb9;
 }
 .audio-file-label input {
   border: 0;
@@ -46,8 +34,8 @@
   padding: 12px 0;
 }
 .audio-file-label input::file-selector-button {
-  background: #c5ed92;
-  color: #243318;
+  background: #c4b5fd;
+  color: #231b36;
   border: 0;
   border-radius: 4px;
   padding: 10px;
@@ -61,9 +49,9 @@
 }
 .upload-fields select {
   font: inherit;
-  background: #171c13;
-  border: 1px solid #49573c;
-  color: #eef5e6;
+  background: #13151a;
+  border: 1px solid #363b46;
+  color: #f2f3f7;
   padding: 12px;
   border-radius: 5px;
   width: 100%;
@@ -105,10 +93,10 @@
 .upload-job-icon {
   display: grid;
   place-items: center;
-  background: #33432a;
+  background: #23262e;
   border-radius: 7px;
   padding: 17px;
-  color: #c5dfae;
+  color: #c4c8d1;
 }
 .upload-job-body {
   min-width: 0;
@@ -121,7 +109,7 @@
 .upload-job-body > p {
   font-size: 11px;
   line-height: 1.7;
-  color: #95a886;
+  color: #a8adb9;
   margin: 8px 0;
   overflow-wrap: anywhere;
 }
@@ -132,8 +120,8 @@
   font-size: 10px;
   border-radius: 4px;
   padding: 5px 8px;
-  background: #34412a;
-  color: #c1d6a9;
+  background: #23262e;
+  color: #c4c8d1;
   margin: 6px 12px 6px 0;
 }
 .status-failed {
@@ -142,8 +130,8 @@
 }
 .status-processing,
 .status-queued {
-  background: #3b402a;
-  color: #ded5a2;
+  background: #23262e;
+  color: #c4b5fd;
 }
 .upload-job-body .job-error {
   color: #efb59c;
@@ -169,19 +157,10 @@
 .remove-upload-confirm > p {
   font-size: 12px;
   line-height: 1.8;
-  color: #d2bfa7;
+  color: #c4b5fd;
   margin-bottom: 14px;
 }
 @media (max-width: 760px) {
-  .upload-nav {
-    grid-column: 1/-1;
-    grid-row: 3;
-    margin: 0;
-    padding: 8px 10px;
-    background: #2b3623;
-    border-radius: 5px;
-    justify-content: center;
-  }
   .upload-form {
     padding: 20px;
   }

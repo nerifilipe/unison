@@ -18,6 +18,12 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 4. **Listening rooms (completed):** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
 
+## Frontend refinement — 2026-09-10
+
+Before milestone 5, redesign the complete interface around music and everyday actions: neutral charcoal surfaces, a restrained lavender accent, clear typography, compact navigation and consistent controls across Discover, accounts, library, uploads, rooms and the persistent player. Replace development badges, milestone labels, fictitious cover branding and infrastructure-oriented product copy. The spotlight uses actual backend catalog metadata; search remains server-backed.
+
+The user explicitly chose to keep the three generated sample tracks and existing uploads. No catalog, account or library data is removed. Automated tests and technical documentation remain part of the repository. Verify desktop/mobile layouts and the existing end-to-end playback, library, ingestion and room flows before delivery.
+
 ## Milestone 1 acceptance criteria
 
 - A fresh checkout starts with documented Docker Compose commands; no cloud accounts or host Maven required.

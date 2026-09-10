@@ -125,7 +125,7 @@ test("register, favorites, playlist CRUD and ordering persist; player survives a
     .getByRole("button", { name: "Create your account", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Your library.", exact: true }),
+    page.getByRole("heading", { name: "Your library", exact: true }),
   ).toBeVisible();
   await expect(audio).toHaveAttribute("data-session-proof", "same-player");
   expect(await audio.evaluate((a: HTMLAudioElement) => a.paused)).toBe(false);

@@ -173,10 +173,18 @@ test("two listeners share votes, host playback, seek, reconnect and navigation w
       )
       .toBeLessThan(1.2);
     await guest.reload();
-    await expect(guest.getByText('Live · synchronized',{exact:true})).toBeVisible();
-    await guest.getByRole('button',{name:'Enable room audio',exact:true}).click();
-    await expect.poll(()=>paused(guest)).toBe(false);
-    await expect.poll(async()=>Math.abs(await audioTime(page)-await audioTime(guest))).toBeLessThan(1.2);
+    await expect(
+      guest.getByText("Live · synchronized", { exact: true }),
+    ).toBeVisible();
+    await guest
+      .getByRole("button", { name: "Enable room audio", exact: true })
+      .click();
+    await expect.poll(() => paused(guest)).toBe(false);
+    await expect
+      .poll(async () =>
+        Math.abs((await audioTime(page)) - (await audioTime(guest))),
+      )
+      .toBeLessThan(1.2);
     await page
       .getByRole("slider", { name: "Room seek", exact: true })
       .fill("59");

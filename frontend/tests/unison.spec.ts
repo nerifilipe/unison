@@ -109,7 +109,7 @@ test("loading, API failure and retry", async ({ page }) => {
     await route.fulfill({ status: 503, body: "{}" });
   });
   await page.goto("/");
-  await expect(page.getByText("Finding your frequencies…")).toBeVisible();
+  await expect(page.getByText("Loading tracks…")).toBeVisible();
   release();
   await expect(page.getByRole("alert")).toContainText(
     "We couldn't reach the catalog.",

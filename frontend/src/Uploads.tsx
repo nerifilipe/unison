@@ -80,11 +80,10 @@ export function UploadsPage() {
         <div className="breadcrumb">
           Your studio <span>Upload audio</span>
         </div>
-        <span className="demo-tag">MAKE YOURSELF HEARD</span>
       </header>
       <div className="page-content uploads-page">
-        <p className="eyebrow">EVERY SOUND STARTS SOMEWHERE.</p>
-        <h1>Share a little of your world.</h1>
+        <p className="eyebrow">YOUR STUDIO</p>
+        <h1>Upload your music</h1>
         <p className="page-description">
           Bring your own music to Unison. Finished tracks appear in the public
           catalog.
@@ -118,7 +117,7 @@ export function UploadsPage() {
           {status === "ready" && jobs.length === 0 && (
             <div className="message-state">
               <FileAudio />
-              <h3>Your first release starts here.</h3>
+              <h3>No uploads yet.</h3>
               <p>
                 Upload an original recording or audio you have permission to
                 distribute.

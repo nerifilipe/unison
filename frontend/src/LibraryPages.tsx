@@ -28,7 +28,6 @@ function LibraryHeader({ title }: { title: string }) {
         Your collection <ChevronRight size={14} />
         <span>{title}</span>
       </div>
-      <span className="demo-tag">PRIVATE LIBRARY</span>
     </header>
   );
 }
@@ -135,8 +134,8 @@ export function LibraryPage() {
       <div className="page-content library-page">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">EVERY COLLECTION TELLS A STORY.</p>
-            <h1>Your library.</h1>
+            <p className="eyebrow">YOUR COLLECTION</p>
+            <h1>Your library</h1>
           </div>
           <button className="primary-button" onClick={() => setCreating(true)}>
             <Plus size={17} />
@@ -165,7 +164,7 @@ export function LibraryPage() {
         )}
         <div className="section-heading">
           <h2>Made by you</h2>
-          <span className="section-kicker">ONLY YOU CAN SEE THESE</span>
+          <span className="section-kicker">Private playlists</span>
         </div>
         {status === "loading" && <p role="status">Loading your playlists…</p>}
         {status === "error" && (
@@ -245,8 +244,8 @@ export function FavoritesPage() {
     <>
       <LibraryHeader title="Favorites" />
       <div className="page-content library-page">
-        <p className="eyebrow">THE SOUNDS YOU COME BACK TO.</p>
-        <h1>Close to heart.</h1>
+        <p className="eyebrow">YOUR COLLECTION</p>
+        <h1>Favorites</h1>
         <p className="page-description">Your favorites, all in one place.</p>
         {status === "loading" && <p role="status">Loading favorites…</p>}
         {status === "error" && (

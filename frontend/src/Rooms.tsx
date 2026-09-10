@@ -59,11 +59,10 @@ export function RoomsPage() {
         <div className="breadcrumb">
           Listen together <span>Rooms</span>
         </div>
-        <span className="demo-tag">SAME SONG. SAME MOMENT.</span>
       </header>
       <div className="page-content rooms-page">
-        <p className="eyebrow">GOOD MUSIC IS BETTER SHARED.</p>
-        <h1>{current ? state.name : "Find your listening company."}</h1>
+        <p className="eyebrow">LISTEN TOGETHER</p>
+        <h1>{current ? state.name : "Listening rooms"}</h1>
         {(error || room.error) && (
           <p role="alert" className="form-error">
             {error || room.error}
@@ -146,7 +145,7 @@ export function RoomsPage() {
             )}
             <p className="form-note">
               Rooms are unlisted: anyone signed in with the invitation can join.
-              Rooms end when the host leaves or the server restarts.
+              The host controls playback and ends the room when they leave.
             </p>
           </>
         ) : (
@@ -228,7 +227,7 @@ export function RoomsPage() {
                 <Radio size={48} />
               </div>
               <div className="room-now-info">
-                <p className="eyebrow">ON THE SAME WAVELENGTH</p>
+                <p className="eyebrow">NOW PLAYING</p>
                 <h2>{state.track?.title ?? "A little quiet, for now."}</h2>
                 <p>
                   {state.track?.artist ??

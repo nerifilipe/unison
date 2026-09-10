@@ -228,7 +228,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             {!track && <Music2 size={23} />}
           </div>
           <div>
-            <strong>{track?.title ?? "Your next favorite awaits"}</strong>
+            <strong>{track?.title ?? "Nothing playing"}</strong>
             <span>{track?.artist ?? "Pick a track to start listening"}</span>
             {room && (
               <Link className="room-player-link" to={`/rooms/${room.id}`}>

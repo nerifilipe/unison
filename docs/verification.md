@@ -47,17 +47,17 @@ Verified locally on 2026-09-09, Windows + Docker Desktop/WSL 2.
 
 ## Results
 
-| Check | Result |
-| --- | --- |
-| `docker compose up -d --build` | Passed; PostgreSQL and backend healthy, audio seed exits 0, frontend and storage running |
-| Backend Java 21 / Spring Boot 4.1.1 container build | Passed, including 2 MVC contract tests |
-| Windows `.\mvnw.cmd -B -ntp verify` | Passed; 2 tests, 0 failures/errors |
-| Frontend TypeScript + Vite production build | Passed on host Node 25 and container Node 24.16.0 |
-| npm dependency audit during final installation | 0 reported vulnerabilities; not a full security audit |
-| PostgreSQL query | Three seeded tracks, stable IDs and 60-second durations |
-| PowerShell smoke test after recreating backend | Passed; gateway recovers without a frontend restart, all three WAV objects return HTTP 206 |
-| Playwright desktop + mobile Chromium | 10 tests passed |
-| Desktop/mobile screenshots | Inspected; responsive layout, no horizontal overflow |
+| Check                                               | Result                                                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `docker compose up -d --build`                      | Passed; PostgreSQL and backend healthy, audio seed exits 0, frontend and storage running   |
+| Backend Java 21 / Spring Boot 4.1.1 container build | Passed, including 2 MVC contract tests                                                     |
+| Windows `.\mvnw.cmd -B -ntp verify`                 | Passed; 2 tests, 0 failures/errors                                                         |
+| Frontend TypeScript + Vite production build         | Passed on host Node 25 and container Node 24.16.0                                          |
+| npm dependency audit during final installation      | 0 reported vulnerabilities; not a full security audit                                      |
+| PostgreSQL query                                    | Three seeded tracks, stable IDs and 60-second durations                                    |
+| PowerShell smoke test after recreating backend      | Passed; gateway recovers without a frontend restart, all three WAV objects return HTTP 206 |
+| Playwright desktop + mobile Chromium                | 10 tests passed                                                                            |
+| Desktop/mobile screenshots                          | Inspected; responsive layout, no horizontal overflow                                       |
 
 ## End-to-end coverage
 
@@ -78,6 +78,14 @@ The main playback test does not mock the backend or media. Error/empty/loading t
 - Dependency installation had to finish before the first frontend Docker build could use its lockfile.
 - Updating/recreating the backend exposed stale DNS resolution in Nginx. Named upstreams now use Docker DNS with a five-second refresh and valid Host headers. Verified by recreating only the backend and repeating the smoke check.
 - An offscreen skip link appeared in a mobile full-page capture. It is now clipped until focused.
+
+## Frontend redesign — 2026-09-10
+
+- Rebuilt the frontend Docker image successfully (TypeScript and Vite production build).
+- All 30 existing end-to-end tests passed on desktop and mobile Chromium after updating assertions for the revised product copy. Playback continuity, search/error recovery, library mutations, uploads/credits and two-listener room synchronization remain covered.
+- Reviewed Discover, About, sign-in/registration, account, library, favorites, playlist, uploads and room entry at 390, 768 and 1440 px. No horizontal page overflow or browser JavaScript errors were detected. Screenshots are in `frontend/test-results/visual-review/`; populated room and upload captures are produced by the end-to-end suite.
+- Kept the generated catalog tracks and existing uploaded music as requested. Removed development labels and infrastructure instructions from the interface; operational constraints remain documented here and in the feature docs.
+- The first test run lost access to localhost when services stopped; the completed rerun above used healthy services. Browser coverage remains Chromium emulation, not physical devices.
 
 ## Repeat
 
