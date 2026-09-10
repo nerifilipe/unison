@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes, useSearchParams } from "react-router-dom";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -17,52 +17,57 @@ import {
   Waves,
   Heart,
   Library,
+  Upload,
 } from "lucide-react";
 import { usePlayer } from "./Player";
 import { formatTime, type Track } from "./types";
 import { AccountGate, AccountMenu, AccountPage } from "./Auth";
 import { FavoritesPage, LibraryPage, PlaylistPage } from "./LibraryPages";
 import { TrackActions } from "./TrackActions";
+import { UploadsPage } from "./Uploads";
 
 function Discover() {
+  const [params] = useSearchParams();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
     "loading",
   );
   const [attempt, setAttempt] = useState(0);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(params.get("q") ?? "");
   const { track: current, playing, select } = usePlayer();
   useEffect(() => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     let active = true;
     setStatus("loading");
-    fetch("/api/tracks", { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error("Catalog unavailable");
-        return response.json();
-      })
-      .then((data: Track[]) => {
-        if (active) {
-          setTracks(data);
-          setStatus("ready");
-        }
-      })
-      .catch(() => {
-        if (active) setStatus("error");
-      })
-      .finally(() => clearTimeout(timeout));
+    const debounce = setTimeout(() => {
+      fetch(
+        `/api/tracks${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ""}`,
+        { signal: controller.signal },
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Catalog unavailable");
+          return response.json();
+        })
+        .then((data: Track[]) => {
+          if (active) {
+            setTracks(data);
+            setStatus("ready");
+          }
+        })
+        .catch(() => {
+          if (active) setStatus("error");
+        })
+        .finally(() => clearTimeout(timeout));
+    }, 250);
     return () => {
       active = false;
       clearTimeout(timeout);
+      clearTimeout(debounce);
       controller.abort();
     };
-  }, [attempt]);
-  const visible = tracks.filter((track) =>
-    `${track.title} ${track.artist} ${track.genre}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
-  );
+  }, [attempt, query]);
+  const visible = tracks;
   return (
     <>
       <header className="topbar">
@@ -154,6 +159,7 @@ function Discover() {
               <Search size={17} />
               <input
                 type="search"
+                maxLength={120}
                 aria-label="Search catalog"
                 placeholder="Find a sound…"
                 value={query}
@@ -186,10 +192,10 @@ function Discover() {
             <div className="message-state">
               <Music2 />
               <h3>
-                {tracks.length ? "No sounds found." : "The catalog is quiet."}
+                {query.trim() ? "No sounds found." : "The catalog is quiet."}
               </h3>
               <p>
-                {tracks.length
+                {query.trim()
                   ? "Try another title, artist or genre."
                   : "Add the demo seed and come back for a listen."}
               </p>
@@ -307,8 +313,9 @@ function About() {
             <p>
               A React interface, a modular Spring Boot API, PostgreSQL metadata
               and S3-compatible audio storage. Save favorites and make private
-              playlists with your account. Uploads and synchronized listening
-              rooms will follow in later milestones.
+              playlists with your account, or share authorized audio from your
+              studio. Synchronized listening rooms will follow in a later
+              milestone.
             </p>
           </section>
         </div>
@@ -352,6 +359,10 @@ export default function App() {
             Your library
           </NavLink>
         </nav>
+        <NavLink className="upload-nav" to="/uploads">
+          <Upload size={17} />
+          Upload audio
+        </NavLink>
         <AccountMenu />
         <div className="sidebar-bottom">
           <div className="sidebar-symbol">
@@ -368,7 +379,7 @@ export default function App() {
             lost in sound.
           </p>
           <ArrowDown size={19} />
-          <span className="build-label">MAKE IT YOURS · MILESTONE 02</span>
+          <span className="build-label">SHARE YOUR SOUND · MILESTONE 03</span>
         </div>
       </aside>
       <main id="main">
@@ -376,6 +387,14 @@ export default function App() {
           <Route path="/" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/uploads"
+            element={
+              <AccountGate>
+                <UploadsPage />
+              </AccountGate>
+            }
+          />
           <Route
             path="/favorites"
             element={

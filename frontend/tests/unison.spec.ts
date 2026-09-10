@@ -7,8 +7,11 @@ test("real catalog, S3 range requests, playback and persistent navigation", asyn
   const api = await request.get("/api/tracks");
   expect(api.ok()).toBeTruthy();
   const tracks = await api.json();
-  expect(tracks).toHaveLength(3);
-  for (const track of tracks) {
+  const demoTracks = tracks.filter((track: { id: string }) =>
+    ["first-light", "slow-orbit", "tidal"].includes(track.id),
+  );
+  expect(demoTracks).toHaveLength(3);
+  for (const track of demoTracks) {
     const media = await request.get(track.audioUrl, {
       headers: { Range: "bytes=0-43" },
     });

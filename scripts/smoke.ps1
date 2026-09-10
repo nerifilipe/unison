@@ -1,6 +1,7 @@
 param([string]$BaseUrl = 'http://localhost:3000')
 $ErrorActionPreference = 'Stop'
-$tracks = Invoke-RestMethod "$BaseUrl/api/tracks"
+$catalog = Invoke-RestMethod "$BaseUrl/api/tracks"
+$tracks = @($catalog | Where-Object { $_.id -in @('first-light','slow-orbit','tidal') })
 if ($tracks.Count -ne 3) { throw "Expected 3 demo tracks; got $($tracks.Count)" }
 foreach ($track in $tracks) {
     $response = Invoke-WebRequest "$BaseUrl$($track.audioUrl)" -Headers @{ Range = 'bytes=0-43' }

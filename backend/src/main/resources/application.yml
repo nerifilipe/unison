@@ -8,6 +8,10 @@ server:
         same-site: lax
         secure: ${SESSION_COOKIE_SECURE:false}
 spring:
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 26MB
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/unison}
     username: ${DATABASE_USER:unison}
@@ -24,3 +28,10 @@ management:
   endpoint:
     health:
       show-details: never
+unison:
+  storage:
+    endpoint: ${S3_ENDPOINT:http://localhost:9000}
+    access-key: ${S3_ACCESS_KEY:unison-local}
+    secret-key: ${S3_SECRET_KEY:unison-local-storage}
+  uploads:
+    enabled: ${UPLOAD_WORKER_ENABLED:true}

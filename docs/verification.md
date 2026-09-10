@@ -1,5 +1,17 @@
 # Unison verification
 
+## Milestone 3 — 2026-09-10
+
+- **Builds:** Docker Compose rebuild/start succeeded; frontend TypeScript/Vite build passed. Host `mvnw.cmd -B -ntp verify` passed 7 tests: catalog/security contracts and audio stream/duration validation.
+- **End-to-end:** `npx playwright test --workers=2` passed **22 tests** across desktop/mobile Chromium, including all prior account/library/player regressions.
+- **Real ingestion:** browser form uploads a generated four-second WAV, the live worker converts/publishes it, backend search finds it, S3 serves MP3 byte ranges (206), and the browser plays it with advancing time.
+- **Validation/ownership:** missing CSRF (403), false rights declaration, unsupported extension, empty file, oversized file (413), corrupt audio, failed-job retry, overlong search, and another account's read/retry/delete (404) verified. Anonymous access to private originals is denied (403).
+- **Lifecycle:** deleting a published upload removes its catalog row, favorite and playlist references, then removes its S3 output and job. Tests remove their generated audio after success.
+- **Recovery:** `node scripts/verify-ingestion-recovery.mjs` passed against the running stack. It simulated expired PROCESSING leases on its own disposable job, verified reprocessing at attempt 2 and an actionable failure after attempt 3, then verified deferred cleanup completed. This simulates durable interrupted state; it does not kill a live worker.
+- **Mobile correction:** the first mobile run exposed shared form CSS overriding checkbox dimensions. Moving feature CSS after base styles and giving the checkbox explicit scoped dimensions fixed the actual click target; the complete mobile upload flow then passed.
+
+See [ingestion](ingestion.md) for bounds, private/public object policy and operational limits. Test accounts remain disposable local data. Coverage uses Chromium emulation, not physical phones or Safari/Firefox.
+
 ## Milestone 2 — 2026-09-09
 
 - **Backend:** `mvnw.cmd -B -ntp verify` passed 4 tests (2 catalog contracts + 2 security boundary tests). The Docker build also ran all 4 successfully.

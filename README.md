@@ -2,7 +2,7 @@
 
 A little space to get lost in sound. A music web application for a Computer Engineering portfolio.
 
-**Milestones 1–2:** backend-driven catalog, original synthetic demo audio, a persistent player, email/password accounts, favorites and private playlists. Includes play/pause, seek, volume, local catalog filtering, playlist editing/ordering and recoverable error states. Uploads and synchronized rooms are future milestones.
+**Milestones 1–3:** backend-driven catalog and search, original synthetic demo audio, a persistent player, accounts, favorites, private playlists and authorized audio uploads. A durable processing queue validates audio with FFmpeg, publishes MP3 files, and handles retry/removal. Synchronized rooms are the next milestone.
 
 ## Run locally
 
@@ -18,7 +18,9 @@ Open **http://localhost:3000**. Click **Start listening**, navigate to **About U
 
 To try the personal library, select **Sign in → Create account**, choose a display name, email and password (10–64 characters), then create a playlist in **Your library**. In **Discover**, use the heart to save a favorite and the list-plus button to add a track to a playlist. Open the playlist to rename it, edit its description, reorder/remove tracks or delete it. Use **Your account → Sign out** to end the session. Registration does not send email; verification and password recovery are not implemented yet.
 
-Existing milestone 1 installations upgrade with the same startup command. Flyway adds the account/library tables without deleting existing catalog data or audio. Sessions expire after 30 minutes idle or when the backend restarts; sign in again to restore access to persisted favorites/playlists.
+To publish audio, sign in and select **Upload audio**. Choose an audio-only WAV, MP3, FLAC or OGG file (up to 25 MiB, 1 second–10 minutes), enter its metadata and source/permission, and confirm your distribution rights. Follow its status under **Your uploads**, then select **Find in Discover** to play it. Failed jobs can be retried; removing an upload also removes its track from favorites/playlists. Only processed audio is public; originals are private. See [ingestion](docs/ingestion.md) for limits and lifecycle details.
+
+Existing installations upgrade with the same startup command. Flyway adds the account/library/ingestion tables without deleting existing catalog data or audio. Sessions expire after 30 minutes idle or when the backend restarts; sign in again to restore access to persisted favorites/playlists.
 
 ```sh
 docker compose ps -a
@@ -53,7 +55,7 @@ npm run dev
 
 Open the Vite URL printed in the terminal (normally http://127.0.0.1:5173). Vite proxies `/api` to port 8080 and `/media` to local S3 port 9000; keep the Compose services running. Fonts and artwork are bundled/local.
 
-Backend: Java **21 JDK**, with the included Maven Wrapper (Maven downloads on first use). Stop only the container backend to free port 8080, leaving database/storage up:
+Backend: Java **21 JDK**, with the included Maven Wrapper (Maven downloads on first use). For host execution, install FFmpeg/ffprobe on PATH, or set `UPLOAD_WORKER_ENABLED=false` to leave processing to a later worker run. The Docker backend already includes both tools. Stop only the container backend to free port 8080, leaving database/storage up:
 
 ```sh
 docker compose stop backend
@@ -79,13 +81,15 @@ npm run test:e2e
 
 On Linux, Playwright may require `npx playwright install --with-deps chromium`. The suite runs desktop and mobile Chromium profiles, checks all three media objects and HTTP byte ranges, plays real audio, verifies audio element identity and advancing playback across routes, seeks, changes volume, switches tracks and exercises catalog/media failure recovery. Failure-state tests intercept requests; the main playback test uses the real backend and storage. Screenshots/traces: `frontend/test-results/`; HTML report: `frontend/playwright-report/`.
 
-The library suite also registers unique `unison-e2e-…@example.test` accounts, verifies CSRF protection and ownership using independent sessions, and exercises favorites and playlist management in the browser. It leaves these disposable accounts in the local database. It does not use your own account or contact any email service.
+The library and ingestion suites register unique `unison-e2e-…@example.test` accounts, verify CSRF protection and ownership using independent sessions, and exercise favorites, playlists and uploads in the browser. Ingestion tests generate their own sine-wave audio, verify actual FFmpeg/S3 publication and playback, invalid files, size limits, retry and cascading deletion. Successful tests remove their uploaded audio; disposable accounts remain in the local database. Tests do not use your own account or contact any email service.
+
+Optional queue recovery check, from the repository root with Node 22.12+ and Docker on PATH: `node scripts/verify-ingestion-recovery.mjs`. It simulates expired processing leases only on a disposable job it creates, verifies recovery and the retry limit, then removes the job. Set `DOCKER_BIN` to the Docker executable path if necessary.
 
 ## Structure
 
 ```text
 frontend/   React, TypeScript, Vite, Playwright
-backend/    Java 21, Spring Boot; catalog, identity, library and shared modules
+backend/    Java 21, Spring Boot; catalog, identity, library, ingestion and shared modules
 infra/      Nginx gateway and FFmpeg/audio seed container
 docs/       Project plan, audio provenance, architecture and verification notes
 scripts/    Original demo-audio generator and local smoke check
@@ -102,6 +106,7 @@ Account/session behavior and the personal library API are documented in [persona
 - **Port already in use:** stop the conflicting service or change the loopback port mapping in `compose.yaml` (and Vite proxy targets for API/storage changes).
 - **Catalog fails:** inspect `docker compose logs backend db`; the backend waits for PostgreSQL and validates the Flyway schema.
 - **Audio fails:** inspect `docker compose logs audio-seed storage`. Rerun `docker compose run --rm audio-seed` to restore storage contents from the built seed image; it is safe to repeat.
+- **Upload fails:** check the source format/duration and `docker compose logs backend storage`; restart the stack with `--build` to create the private originals bucket. Storage/processing failures can be retried from Your uploads. Interrupted processing is reclaimed after a 10-minute lease; deletion cleanup is retried automatically.
 - **Database credentials changed:** PostgreSQL initialization variables only apply to a new volume. Use the original credentials or deliberately reset the demo volumes.
 
 ## License

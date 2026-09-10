@@ -1,0 +1,230 @@
+.upload-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 10px 0;
+  padding: 11px 6px;
+  font-size: 12px;
+  color: #b7cf9f;
+}
+.upload-nav.active {
+  color: var(--accent);
+}
+.uploads-page h1 {
+  max-width: 700px;
+}
+.upload-form {
+  max-width: 850px;
+  padding: 28px;
+  border: 1px solid #425436;
+  background: #20271b;
+  border-radius: 9px;
+  margin-bottom: 40px;
+}
+.audio-file-label {
+  align-items: center;
+  text-align: center;
+  border: 1px dashed #6b8054;
+  border-radius: 7px;
+  padding: 26px;
+  background: #2c3824;
+  color: var(--accent) !important;
+}
+.audio-file-label strong {
+  font-size: 17px;
+}
+.audio-file-label span {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #abc094;
+}
+.audio-file-label input {
+  border: 0;
+  background: none;
+  font-size: 11px;
+  max-width: 350px;
+  padding: 12px 0;
+}
+.audio-file-label input::file-selector-button {
+  background: #c5ed92;
+  color: #243318;
+  border: 0;
+  border-radius: 4px;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.upload-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 130px;
+  gap: 16px;
+}
+.upload-fields select {
+  font: inherit;
+  background: #171c13;
+  border: 1px solid #49573c;
+  color: #eef5e6;
+  padding: 12px;
+  border-radius: 5px;
+  width: 100%;
+}
+.upload-form .rights-checkbox {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px !important;
+  line-height: 1.8;
+}
+.upload-form .rights-checkbox input {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  margin-top: 3px;
+  padding: 0;
+}
+.upload-form > .primary-button {
+  align-self: flex-start;
+}
+.upload-success {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--accent);
+  font-size: 13px;
+}
+.upload-history {
+  max-width: 1000px;
+}
+.upload-job {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.upload-job-icon {
+  display: grid;
+  place-items: center;
+  background: #33432a;
+  border-radius: 7px;
+  padding: 17px;
+  color: #c5dfae;
+}
+.upload-job-body {
+  min-width: 0;
+  flex: 1;
+}
+.upload-job h3 {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.upload-job-body > p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #95a886;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.job-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  border-radius: 4px;
+  padding: 5px 8px;
+  background: #34412a;
+  color: #c1d6a9;
+  margin: 6px 12px 6px 0;
+}
+.status-failed {
+  background: #57372b;
+  color: #ffc1a8;
+}
+.status-processing,
+.status-queued {
+  background: #3b402a;
+  color: #ded5a2;
+}
+.upload-job-body .job-error {
+  color: #efb59c;
+}
+.upload-job-actions {
+  display: flex;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.upload-job-actions .secondary-button {
+  font-size: 10px;
+}
+.upload-job-actions .icon-button {
+  min-width: 35px;
+  min-height: 35px;
+}
+.remove-upload-confirm {
+  margin-top: 15px;
+  padding: 16px;
+  border: 1px solid #624b38;
+  border-radius: 5px;
+}
+.remove-upload-confirm > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #d2bfa7;
+  margin-bottom: 14px;
+}
+@media (max-width: 760px) {
+  .upload-nav {
+    grid-column: 1/-1;
+    grid-row: 3;
+    margin: 0;
+    padding: 8px 10px;
+    background: #2b3623;
+    border-radius: 5px;
+    justify-content: center;
+  }
+  .upload-form {
+    padding: 20px;
+  }
+  .upload-fields {
+    grid-template-columns: 1fr;
+  }
+  .uploads-page h1 {
+    font-size: 29px;
+  }
+  .audio-file-label {
+    padding: 19px 12px;
+  }
+  .audio-file-label span {
+    font-size: 10px;
+  }
+  .upload-history .section-heading {
+    flex-direction: row;
+    align-items: center;
+  }
+  .upload-history h2 {
+    font-size: 19px;
+  }
+  .upload-history .secondary-button {
+    font-size: 10px;
+  }
+  .upload-job {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .upload-job-icon {
+    padding: 12px;
+  }
+  .upload-job-body {
+    flex-basis: calc(100% - 65px);
+  }
+  .upload-job-actions {
+    margin-left: 61px;
+  }
+  .upload-job-body .text-link {
+    display: block;
+    margin-top: 8px;
+  }
+  .upload-job h3 {
+    font-size: 14px;
+  }
+}

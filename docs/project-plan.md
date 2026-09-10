@@ -14,7 +14,7 @@ Directories: `frontend/`, `backend/`, `infra/`, `docs/`, `scripts/`. Backend pac
 
 1. **Local foundation (completed):** Docker Compose, database migrations, generated authorized demo audio in local S3 storage, backend catalog API, loading/empty/error states, persistent player, client-side navigation, automated end-to-end checks and run instructions.
 2. **Personal library (completed):** accounts, authentication, favorites and playlists; authorization and ownership tests.
-3. **Catalog ingestion:** authenticated uploads, validation, FFmpeg processing jobs, storage lifecycle and catalog search.
+3. **Catalog ingestion (completed):** authenticated uploads, validation, FFmpeg processing jobs, storage lifecycle and catalog search.
 4. **Listening rooms:** WebSockets, host controls, shared queue, votes, reconnect/synchronization protocol and concurrency tests.
 5. **Portfolio release:** accessibility and performance review, CI, deployment, observability and architecture documentation.
 
@@ -53,4 +53,18 @@ Implemented with Spring Boot 4.1.1, Java 21, React 19, TypeScript, Vite 7, Postg
 
 ## Milestone 2 delivery
 
-Completed on 2026-09-09. Added Spring Security session authentication with CSRF and BCrypt, account-scoped favorites, and private playlist CRUD/membership/ordering. The responsive interface provides account, library and favorites pages without remounting the player. Flyway upgrades the existing database. Validation: 4 backend tests and 18 desktop/mobile end-to-end tests passed; see `verification.md`. Milestone 3 is planned, not started.
+Completed on 2026-09-09. Added Spring Security session authentication with CSRF and BCrypt, account-scoped favorites, and private playlist CRUD/membership/ordering. The responsive interface provides account, library and favorites pages without remounting the player. Flyway upgrades the existing database. Validation: 4 backend tests and 18 desktop/mobile end-to-end tests passed; see `verification.md`.
+
+## Milestone 3 acceptance criteria
+
+- Authenticated, CSRF-protected multipart upload with title, artist, genre and an explicit distribution-rights declaration/provenance note.
+- Limit files to 25 MiB and WAV/MP3/FLAC/OGG; verify actual audio with ffprobe, require one audio-only stream and 1–600 seconds. File extensions/MIME types alone are not trusted.
+- Store originals privately in S3; persist jobs in PostgreSQL, process outside the HTTP request and publish only validated MP3 output. Bound process time and restrict FFmpeg to local files and supported demuxers.
+- Show upload/job status, errors, retry and owner-only removal. Recover abandoned work on restart through leases; retry pending storage cleanup. Published uploads are intentionally public catalog entries.
+- Remove successful originals, remove both objects when deleting, and hide a removed track from the catalog/library through cascading references.
+- Search titles, artists and genres through a bounded backend query; debounce/cancel frontend searches. Existing player and account/library behavior must remain intact.
+- Validate with generated authorized test audio, real S3/FFmpeg/database integration, invalid payloads, permissions and existing regression tests. No rooms in this milestone.
+
+## Milestone 3 delivery
+
+Completed on 2026-09-10. Added the ingestion module, V3 migration, private source storage, a durable processing/cleanup queue, bounded FFmpeg conversion and authenticated upload/retry/removal UI. Catalog search now queries the backend. Validation: 7 backend tests, 22 desktop/mobile end-to-end tests, and an independent expired-lease recovery check passed. Documentation includes API, lifecycle and remaining operational limits in `ingestion.md`. Listening rooms are the next milestone.

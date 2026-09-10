@@ -7,6 +7,7 @@ import { AuthProvider } from "./Auth";
 import { LibraryProvider } from "./LibraryContext";
 import "./styles.css";
 import "./library.css";
+import "./uploads.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

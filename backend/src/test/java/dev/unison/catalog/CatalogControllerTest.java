@@ -18,7 +18,7 @@ class CatalogControllerTest {
     @MockitoBean CatalogService catalog;
 
     @Test void returnsPublicMetadataAndSameOriginMediaUrl() throws Exception {
-        when(catalog.list()).thenReturn(List.of(new TrackDto("first-light", "First Light",
+        when(catalog.list("")).thenReturn(List.of(new TrackDto("first-light", "First Light",
                 "Unison Lab", "Ambient", 60, "/media/demo/first-light.wav", "sunrise")));
         mvc.perform(get("/api/tracks"))
                 .andExpect(status().isOk())
@@ -28,7 +28,7 @@ class CatalogControllerTest {
     }
 
     @Test void emptyCatalogReturnsAnArray() throws Exception {
-        when(catalog.list()).thenReturn(List.of());
+        when(catalog.list("")).thenReturn(List.of());
         mvc.perform(get("/api/tracks")).andExpect(status().isOk()).andExpect(content().json("[]"));
     }
 }
